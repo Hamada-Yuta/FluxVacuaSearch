@@ -186,7 +186,3 @@ assigned identifier before using this entry in a publication.
     note = "arXiv identifier is a placeholder"
 }
 ```
-
-## License
-
-No license has been selected for this release-preparation snapshot.
