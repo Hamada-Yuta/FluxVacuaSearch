@@ -1,4 +1,4 @@
-# FluxVacuaSearch
+# Data analysis of millions of Type IIB flux vacua
 
 This repository contains Python code and symbolic input data for numerical
 searches of string flux vacua. It provides routines for minimizing the scalar
