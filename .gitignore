@@ -1,0 +1,20 @@
+# Python and local environments
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+.pytest_cache/
+.DS_Store
+.env
+.env.*
+# Generated results; symbolic input CSVs are intentionally tracked
+output/
+logs/
+*.log
+*.parquet
+*.h5
+*.hdf5
+*.npy
+*.npz
+# Development notebooks and local scratch files
+.ipynb_checkpoints/
