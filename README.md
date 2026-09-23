@@ -1,8 +1,8 @@
 # Data analysis of millions of Type IIB flux vacua
 
-This repository contains Python code and symbolic input data for numerical
-searches of string flux vacua. It provides routines for minimizing the scalar
-potential and for searching for solutions of supersymmetry conditions.
+This repository contains the potential-minimization script `gradient_P.py`
+and the supporting modules and symbolic inputs needed to run it. The script
+searches for local minima of the Type IIB flux scalar potential using SLSQP.
 
 It is intended as a companion repository to the manuscript:
 
@@ -10,15 +10,9 @@ It is intended as a companion repository to the manuscript:
 Yuta Hamada, Yuma Uematsu, and Masahito Yamazaki  
 **arXiv:** `26XX.XXXXX` (placeholder; to be replaced upon submission).
 
-The source tree is organized around two parts:
-
-- Potential-minimization scripts, including indexed and chunked flux scans.
-- A supersymmetric-vacuum search script and its supporting equation data.
-
 The bundled inputs describe the default model `i = 2`, with two
-complex-structure moduli. Large generated solution datasets and the full
-Calabi–Yau catalogue are not included. The repository does not currently
-contain machine-learning analysis code.
+complex-structure moduli. Large solution datasets, other search scripts,
+and machine-learning analysis code are not included.
 
 ## Repository layout
 
@@ -27,9 +21,6 @@ FluxVacuaSearch/
 ├── README.md
 ├── requirements.txt
 ├── gradient_P.py
-├── gradient_P_index.py
-├── gradient_P_index_chunk.py
-├── SUSY_P.py
 ├── Potential_data/
 │   ├── h21_2.csv
 │   ├── EK_2.csv
@@ -38,35 +29,27 @@ FluxVacuaSearch/
 │   ├── DZW_2.csv
 │   ├── DZbW_2.csv
 │   └── KZZb_2.csv
-├── SUSY_data/
-│   └── DW_2.csv
 └── utils/
+    ├── __init__.py
+    ├── csv_helper.py
+    ├── import_helpers.py
+    ├── import_wrappers.py
+    ├── logger_setup.py
+    ├── optimization_worker.py
+    ├── sampling.py
+    └── variable_generator.py
 ```
 
-### Search scripts
+### Code and inputs
 
 | Path | Purpose |
 |---|---|
-| `gradient_P_index_chunk.py` | Divide an indexed flux scan into chunks and write solutions as Parquet files. |
-| `gradient_P_index.py` | Run an indexed flux scan without chunk slicing; write Parquet files. |
-| `gradient_P.py` | Run an alternative potential-minimization scan; write CSV files. |
-| `SUSY_P.py` | Search for solutions of supersymmetry equations; write CSV files. |
-| `utils/` | Input parsing, variable generation, flux sampling, numerical solvers, and logging. |
+| `gradient_P.py` | Construct the scalar potential, select a batch of flux choices, minimize it, and write CSV results. |
+| `utils/` | Input parsing, variable generation, flux enumeration, optimization, CSV output, and logging. |
+| `Potential_data/*_2.csv` | Seven symbolic input files for the default model, not sampled vacuum solutions. |
 
-### Symbolic inputs
-
-`Potential_data/` contains the symbolic expressions used to construct the
-scalar potential: the exponential Kähler factor, covariant derivatives of the
-superpotential, and the complex-structure metric factor, together with the
-number of complex-structure moduli.
-
-`SUSY_data/DW_2.csv` supplies the equation matrix read by the supersymmetry
-search. These CSV files are **inputs to the calculation**, not tables of
-sampled vacuum solutions.
-
-Only the default model's inputs are bundled. Changing the model requires the
-corresponding input expressions as well as a review of the script's
-model-specific assumptions.
+Only model `i = 2` inputs are bundled. Changing the model requires the
+corresponding input expressions and a review of model-specific assumptions.
 
 ## Quick start
 
@@ -80,65 +63,73 @@ source .venv/bin/activate
 python -m pip install -r requirements.txt
 ```
 
-The code uses NumPy, SciPy, SymPy, joblib, and tqdm. The Parquet-output scripts
-also use pandas and pyarrow.
+Dependencies are NumPy, SciPy, SymPy, joblib, and tqdm.
+No pandas or Parquet engine is required.
 
-### Inspect the scan options
+### Inspect the command-line option
 
 ```bash
-python gradient_P_index_chunk.py --help
+python gradient_P.py --help
 ```
 
-The chunked scan accepts:
+The only scan option is `--index` (default: `0`). It selects a batch
+from the ordered flux enumeration, with a starting offset of
+`index * sample_size`. It is not a random-number seed or an index
+of a fixed `(m1, n1)` pair.
 
-| Option | Meaning |
+Current settings in `gradient_P.py`:
+
+| Setting | Value |
 |---|---|
-| `--index` | Zero-based index of the fixed `(m1, n1)` pair. |
-| `--chunk-id` | Zero-based chunk number within that pair's remaining flux grid. |
-| `--chunk-size` | Number of flux points assigned to each chunk. |
+| Model range | `i_start = i_end = 2` |
+| Flux choices per batch | `sample_size = 1500` |
+| Enumeration range parameter | `flux_range = 17` |
+| Flux sum-of-squares bound | `max_sum_of_squares = 276` |
+| Parallel workers | `N_JOBS = 4` |
 
-The current enumeration uses `0 <= m1, n1 <= 16`, remaining flux components
-between `-16` and `16`, and a total sum-of-squares bound of `276`.
-These settings are defined in the script.
+The first components of both flux vectors are nonnegative, and the
+remaining components may have either sign, subject to the bound.
+Optimization uses ten random initial guesses per flux choice.
 
-### Run a small scan
+### Run a batch
 
 Run from the repository root so that relative input paths resolve correctly:
 
 ```bash
-python gradient_P_index_chunk.py --index 0 --chunk-id 0 --chunk-size 1
+mkdir -p output
+python gradient_P.py --index 0
 ```
 
-This assigns one flux point; it does not guarantee that a vacuum will be
-found. Each point can involve multiple optimization starts, so even a small
-job may take time. The chunked script uses eight workers by default, controlled
-by `N_JOBS`.
+This can be a substantial calculation: it requests up to 1,500 flux choices
+with multiple optimization starts per choice. For a small trial, first reduce
+`sample_size` in the script (for example, to `1`). Changing
+`sample_size` also changes the batch offsets selected by `--index`.
+There are no `--chunk-id` or `--chunk-size` options.
 
-Results are written beneath:
+The script writes:
 
 ```text
-output/parquet/i=2/index=<index>/chunk=<chunk>/ts=<timestamp>/part-*.parquet
+output/i_2_gradient_<index:06>_<YYYYMMDD_HHMM>.csv
+run.log
 ```
 
-Logging is written to `run.log`. Generated outputs and logs are excluded from
-Git tracking. Before using either CSV-output script, create the output
-directory with `mkdir -p output`.
-
-Review flux bounds, model settings, and worker counts before production runs.
-The unrestricted scans can be computationally expensive.
+Create `output/` before running; the script does not create it automatically.
+Avoid concurrent runs with the same index in the same minute, since they
+would target the same CSV filename. Generated outputs and logs are excluded
+from Git tracking.
 
 ### Read generated results
 
-After a scan has produced a Parquet file:
-
 ```python
+import csv
 from pathlib import Path
-import pandas as pd
 
-files = sorted(Path("output/parquet").rglob("part-*.parquet"))
+files = sorted(Path("output").glob("i_2_gradient_*.csv"))
 if files:
-    solutions = pd.read_parquet(files[0])
-    print(solutions.head())
+    with files[0].open(newline="") as stream:
+        reader = csv.DictReader(stream)
+        print(reader.fieldnames)
+        print(next(reader, None))
 else:
     print("No result files found.")
 ```
@@ -147,38 +138,37 @@ else:
 
 ### Symbolic input CSV files
 
-Input expressions use Mathematica-style notation. The loaders in
-`utils/import_helpers.py` and the search scripts translate the variable names
-and parse the expressions with SymPy. The suffix `_2` identifies the bundled
-model; `h21_2.csv` records its number of complex-structure moduli.
+Input expressions use Mathematica-style notation and are parsed with SymPy.
+They contain the exponential Kähler factor, covariant derivatives of the
+superpotential, the inverse complex-structure metric factor, and the number
+of complex-structure moduli. The suffix `_2` identifies the bundled model.
 
-### Generated solution tables
+### Generated solution CSV files
 
-For the default model, the potential-minimization Parquet output has the columns:
+For the default model, the columns are:
 
 ```text
 FunctionValue, taur, taui, Z1r, Z1i, Z2r, Z2i,
 m1, m2, m3, n1, n2, n3
 ```
 
-`FunctionValue` is the minimized scalar-potential value. The `r` and `i`
-suffixes denote real and imaginary parts; `m*` and `n*` label integer flux
-components. Multiple solutions may be recorded for the same flux choice.
-
-The SUSY CSV output records moduli and flux components without the
-`FunctionValue` column. Large generated catalogues are not distributed in
-this repository, and no external dataset archive is specified here.
+`FunctionValue` is the absolute potential value returned by the optimizer's
+objective. The `r` and `i` suffixes denote real and imaginary parts;
+`m*` and `n*` label flux components. Multiple solutions may be recorded
+for the same flux choice. Check `run.log` for errors before interpreting
+the output; interrupted runs may contain a trailing status message.
 
 ## Validation status
 
-This is a release-preparation snapshot. Checks performed so far cover Python
-syntax, the chunked script's help command, local imports, and parsing of the
-bundled potential inputs. Full scans, the SUSY workflow, and reproduction of
-paper results have not yet been validated for this distribution.
+This is a release-preparation snapshot. Checks cover Python syntax, imports
+in the reduced file tree, `gradient_P.py --help`, symbolic-input loading
+and potential construction, and a small flux-enumeration check.
+Full production scans and reproduction of paper results have not been
+validated for this distribution.
 
-Numerical routines were copied without intentional algorithmic changes.
-Random initialization is used, and dependency versions are not pinned to a
-publication reproduction environment.
+The numerical logic of `gradient_P.py` and its optimization worker is
+unchanged. Random initialization is used, and dependency versions are not
+pinned to a publication reproduction environment.
 
 ## Citation
 

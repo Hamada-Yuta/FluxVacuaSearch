@@ -3,5 +3,3 @@ numpy
 scipy
 sympy
 tqdm
-pandas
-pyarrow
