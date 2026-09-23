@@ -4,6 +4,12 @@ This repository contains Python code and symbolic input data for numerical
 searches of string flux vacua. It provides routines for minimizing the scalar
 potential and for searching for solutions of supersymmetry conditions.
 
+It is intended as a companion repository to the manuscript:
+
+**Data analysis of millions of Type IIB flux vacua**  
+Yuta Hamada, Yuma Uematsu, and Masahito Yamazaki  
+**arXiv:** `26XX.XXXXX` (placeholder; to be replaced upon submission).
+
 The source tree is organized around two parts:
 
 - Potential-minimization scripts, including indexed and chunked flux scans.
@@ -176,9 +182,20 @@ publication reproduction environment.
 
 ## Citation
 
-A paper citation and BibTeX entry have not yet been specified for this
-repository. They should be added once the authors confirm the appropriate
-reference.
+If you use this repository, please cite the companion manuscript.
+The arXiv identifier below is a placeholder and must be replaced with the
+assigned identifier before using this entry in a publication.
+
+```bibtex
+@article{Hamada:2026FluxVacua,
+    author = "Hamada, Yuta and Uematsu, Yuma and Yamazaki, Masahito",
+    title = "{Data analysis of millions of Type IIB flux vacua}",
+    eprint = "26XX.XXXXX",
+    archivePrefix = "arXiv",
+    year = "2026",
+    note = "arXiv identifier is a placeholder"
+}
+```
 
 ## License
 
