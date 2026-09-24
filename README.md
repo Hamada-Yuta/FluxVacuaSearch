@@ -19,8 +19,6 @@ effective complex-structure moduli, $Z_1$ and $Z_2$. Accordingly, the value
 `2` in `Potential_data/h21_2.csv` counts the effective moduli used by the
 scan, rather than the full hypersurface's $h^{2,1} = 272$.
 
-Generated solution datasets and analysis notebooks are not included.
-
 ## Repository layout
 
 ```text
