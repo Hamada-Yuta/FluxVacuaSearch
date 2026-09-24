@@ -40,8 +40,7 @@ FluxVacuaSearch/
     ├── import_wrappers.py
     ├── logger_setup.py
     ├── optimization_worker.py
-    ├── variable_generator.py
-    └── ... (other StringVacua utility modules)
+    └── variable_generator.py
 ```
 
 | Path | Purpose |
@@ -52,18 +51,17 @@ FluxVacuaSearch/
 | `utils/variable_generator.py`, `utils/logger_setup.py` | Construct symbols and configure logging. |
 | `Potential_data/*_2.csv` | Seven symbolic input files for model 2; these are not sampled vacuum solutions. |
 
-All fourteen Python files in the source `utils/` directory are included,
-including the SUSY helpers and legacy workers. The scan uses
-`optimization_worker.py`; it does not use `optimization_worker_old.py` or
-`sampling.py`. Flux enumeration for this scan is defined directly in
-`gradient_P.py`. Separate SUSY input files and entry-point scripts are not
-bundled.
+Only the utility modules required by `gradient_P.py` are included:
+`import_wrappers.py`, its dependency `import_helpers.py`, `logger_setup.py`,
+`optimization_worker.py`, and `variable_generator.py`. The package initializer
+`__init__.py` does not import any additional helpers. Flux enumeration is
+defined directly in `gradient_P.py`.
 
-The main script, utility sources, requirements, and seven input CSV files
-are copied without changes from the StringVacua snapshot. Python caches,
-logs, and generated datasets are excluded. Only model 2 is supported by the
-bundled scan: its flux enumeration explicitly assumes three components in
-each of `m` and `n`.
+The main script, retained utility modules, requirements, and seven input
+CSV files are unchanged from the StringVacua snapshot, except for the
+minimal package initializer. Python caches, logs, and generated datasets
+are excluded. Only model 2 is supported by the bundled scan: its flux
+enumeration explicitly assumes three components in each of `m` and `n`.
 
 ## Quick start
 
