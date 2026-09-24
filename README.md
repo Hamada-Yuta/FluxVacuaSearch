@@ -10,8 +10,16 @@ It is intended as a companion repository to the manuscript:
 Yuta Hamada, Yuma Uematsu, and Masahito Yamazaki  
 **arXiv:** `26XX.XXXXX` (placeholder; to be replaced upon submission).
 
-The bundled inputs describe model `i = 2`, with two complex-structure
-moduli. Generated solution datasets and analysis notebooks are not included.
+The bundled model `i = 2` is the model studied in the manuscript: the
+**degree-18 Calabi–Yau hypersurface in the weighted projective space
+$\mathbb{CP}^{4}_{1,1,1,6,9}$**. The full hypersurface has Hodge numbers
+$(h^{1,1}, h^{2,1}) = (2,272)$. The scan works in the
+$\Gamma = \mathbb{Z}_6 \times \mathbb{Z}_{18}$-invariant sector, with two
+effective complex-structure moduli, $Z_1$ and $Z_2$. Accordingly, the value
+`2` in `Potential_data/h21_2.csv` counts the effective moduli used by the
+scan, rather than the full hypersurface's $h^{2,1} = 272$.
+
+Generated solution datasets and analysis notebooks are not included.
 
 ## Repository layout
 
