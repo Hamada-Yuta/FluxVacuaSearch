@@ -1,5 +1,7 @@
-joblib
 numpy
-scipy
+joblib
 sympy
 tqdm
+scipy
+pyarrow
+pandas

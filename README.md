@@ -1,8 +1,8 @@
 # Data analysis of millions of Type IIB flux vacua
 
-This repository contains the potential-minimization script `gradient_P.py`
-and the supporting modules and symbolic inputs needed to run it. The script
-searches for local minima of the Type IIB flux scalar potential using SLSQP.
+This repository contains the `gradient_P.py` scan and the supporting Python
+modules and symbolic inputs from the StringVacua version used for the
+fixed-`(m1, n1)` flux enumeration and Parquet output.
 
 It is intended as a companion repository to the manuscript:
 
@@ -10,9 +10,8 @@ It is intended as a companion repository to the manuscript:
 Yuta Hamada, Yuma Uematsu, and Masahito Yamazaki  
 **arXiv:** `26XX.XXXXX` (placeholder; to be replaced upon submission).
 
-The bundled inputs describe the default model `i = 2`, with two
-complex-structure moduli. Large solution datasets, other search scripts,
-and machine-learning analysis code are not included.
+The bundled inputs describe model `i = 2`, with two complex-structure
+moduli. Generated solution datasets and analysis notebooks are not included.
 
 ## Repository layout
 
@@ -31,25 +30,34 @@ FluxVacuaSearch/
 │   └── KZZb_2.csv
 └── utils/
     ├── __init__.py
-    ├── csv_helper.py
     ├── import_helpers.py
     ├── import_wrappers.py
     ├── logger_setup.py
     ├── optimization_worker.py
-    ├── sampling.py
-    └── variable_generator.py
+    ├── variable_generator.py
+    └── ... (other StringVacua utility modules)
 ```
-
-### Code and inputs
 
 | Path | Purpose |
 |---|---|
-| `gradient_P.py` | Construct the scalar potential, select a batch of flux choices, minimize it, and write CSV results. |
-| `utils/` | Input parsing, variable generation, flux enumeration, optimization, CSV output, and logging. |
-| `Potential_data/*_2.csv` | Seven symbolic input files for the default model, not sampled vacuum solutions. |
+| `gradient_P.py` | Construct the scalar potential, enumerate fluxes for one fixed pair, minimize it with SLSQP, and write Parquet parts. |
+| `utils/optimization_worker.py` | Perform ten starts per flux choice and return distinct accepted endpoints. |
+| `utils/import_helpers.py`, `utils/import_wrappers.py` | Read the symbolic input expressions. |
+| `utils/variable_generator.py`, `utils/logger_setup.py` | Construct symbols and configure logging. |
+| `Potential_data/*_2.csv` | Seven symbolic input files for model 2; these are not sampled vacuum solutions. |
 
-Only model `i = 2` inputs are bundled. Changing the model requires the
-corresponding input expressions and a review of model-specific assumptions.
+All fourteen Python files in the source `utils/` directory are included,
+including the SUSY helpers and legacy workers. The scan uses
+`optimization_worker.py`; it does not use `optimization_worker_old.py` or
+`sampling.py`. Flux enumeration for this scan is defined directly in
+`gradient_P.py`. Separate SUSY input files and entry-point scripts are not
+bundled.
+
+The main script, utility sources, requirements, and seven input CSV files
+are copied without changes from the StringVacua snapshot. Python caches,
+logs, and generated datasets are excluded. Only model 2 is supported by the
+bundled scan: its flux enumeration explicitly assumes three components in
+each of `m` and `n`.
 
 ## Quick start
 
@@ -61,120 +69,186 @@ Use Python 3.9 or newer. From the repository root:
 python3 -m venv .venv
 source .venv/bin/activate
 python -m pip install -r requirements.txt
-```
-
-Dependencies are NumPy, SciPy, SymPy, joblib, and tqdm.
-No pandas or Parquet engine is required.
-
-### Inspect the command-line option
-
-```bash
 python gradient_P.py --help
 ```
 
-The only scan option is `--index` (default: `0`). It selects a batch
-from the ordered flux enumeration, with a starting offset of
-`index * sample_size`. It is not a random-number seed or an index
-of a fixed `(m1, n1)` pair.
+Dependencies are NumPy, SciPy, SymPy, joblib, tqdm, pandas, and PyArrow.
+PyArrow provides the Parquet engine.
 
-Current settings in `gradient_P.py`:
+### Choose the assigned flux pair
+
+The scan option is `--index` (default: `0`). There are **234 valid indices,
+0 through 233**. Each index selects one fixed pair `(m1, n1)`, ordered by
+increasing `m1` and then increasing `n1`, from:
+
+```text
+0 <= m1, n1 <= 16
+m1**2 + n1**2 <= 276
+```
+
+Index 0 selects `(0, 0)`; index 233 selects `(16, 4)`. Inspect the full
+assignment without running an optimization:
+
+```bash
+python - <<'PY'
+from gradient_P import valid_m1n1_pairs
+for index, (m1, n1, sumsq) in enumerate(valid_m1n1_pairs()):
+    print(index, m1, n1, sumsq)
+PY
+```
+
+For the assigned pair, the script exhaustively enumerates the remaining
+four components `m2, n2, m3, n3` in `[-16, 16]`, subject to:
+
+```text
+m1**2 + m2**2 + m3**2 + n1**2 + n2**2 + n3**2 <= 276
+```
+
+Across all 234 indices this enumerates 30,770,178 distinct flux tuples,
+including the all-zero tuple. The latter is not removed by the scan.
+This is enumeration within the stated component ranges; no duality
+identification is performed.
 
 | Setting | Value |
 |---|---|
-| Model range | `i_start = i_end = 2` |
-| Flux choices per batch | `sample_size = 1500` |
-| Enumeration range parameter | `flux_range = 17` |
-| Flux sum-of-squares bound | `max_sum_of_squares = 276` |
-| Parallel workers | `N_JOBS = 4` |
+| Model | `i_start = i_end = 2` |
+| Assignment | One fixed `(m1, n1)` per `--index` |
+| Flux sum-of-squares bound | 276 |
+| Fluxes per processing block | `BLOCK = 2500` |
+| Parallel workers per running script | `N_JOBS = 8` |
+| Initial guesses per flux | 10 |
+| Rows per complete Parquet part | `CHUNK_SIZE = 50_000` |
 
-The first components of both flux vectors are nonnegative, and the
-remaining components may have either sign, subject to the bound.
-Optimization uses ten random initial guesses per flux choice.
+`BLOCK` controls how many flux tuples are passed to joblib at once.
+It does not limit the total number of fluxes explored for an index.
+The largest assignment, index 0, contains 377,657 flux tuples.
 
-### Run a batch
+### Run an assignment
 
-Run from the repository root so that relative input paths resolve correctly:
+Run from the repository root so relative input paths resolve correctly:
 
 ```bash
-mkdir -p output
-python gradient_P.py --index 0
+python gradient_P.py --index 233
 ```
 
-This can be a substantial calculation: it requests up to 1,500 flux choices
-with multiple optimization starts per choice. For a small trial, first reduce
-`sample_size` in the script (for example, to `1`). Changing
-`sample_size` also changes the batch offsets selected by `--index`.
-There are no `--chunk-id` or `--chunk-size` options.
+This assignment contains 89 flux tuples and attempts ten starts per tuple.
+A full scan requires running every index from 0 through 233 once; assignments
+have different sizes. When using a scheduler, pass its array index to
+`--index` and account for eight worker processes per script.
 
-The script writes:
+The previous CSV version used `index * 1500` as a flux-list offset.
+Those old index assignments do not correspond to the fixed-pair indices
+used here. There are no `--chunk-id`, `--chunk-size`, or restart options.
+To limit a local trial to fewer fluxes, explicitly truncate the generator
+in a local copy; reducing `BLOCK` alone does not shorten the scan.
+
+The output directory is created automatically:
 
 ```text
-output/i_2_gradient_<index:06>_<YYYYMMDD_HHMM>.csv
+output/parquet/i=2/index=<index:06d>/ts=<YYYYMMDD_HHMM>/part-00000.parquet
+output/parquet/i=2/index=<index:06d>/ts=<YYYYMMDD_HHMM>/part-00001.parquet
+...
 run.log
 ```
 
-Create `output/` before running; the script does not create it automatically.
-Avoid concurrent runs with the same index in the same minute, since they
-would target the same CSV filename. Generated outputs and logs are excluded
-from Git tracking.
+The final part may contain fewer than 50,000 rows. If no endpoints are
+accepted, no part is written. An interrupted run can lose the unwritten
+buffer while leaving earlier parts on disk. Re-running an index restarts
+its scan and does not resume from existing parts.
+
+Use a distinct output location or minute for repeated runs of the same
+index: the timestamp has minute precision, and matching part names can be
+overwritten. All runs in the same working directory append to `run.log`.
 
 ### Read generated results
 
-```python
-import csv
-from pathlib import Path
+Read an individual part without loading the entire dataset:
 
-files = sorted(Path("output").glob("i_2_gradient_*.csv"))
-if files:
-    with files[0].open(newline="") as stream:
-        reader = csv.DictReader(stream)
-        print(reader.fieldnames)
-        print(next(reader, None))
+```python
+from pathlib import Path
+import pandas as pd
+
+parts = sorted(Path("output/parquet").glob("i=2/index=*/ts=*/part-*.parquet"))
+if parts:
+    df = pd.read_parquet(parts[0])
+    print(df.dtypes)
+    print(df.head())
 else:
     print("No result files found.")
 ```
 
-## Data formats
+When combining parts, select the intended run for each index so repeated
+runs do not double-count the same flux assignments.
 
-### Symbolic input CSV files
+## Data formats and optimization
 
-Input expressions use Mathematica-style notation and are parsed with SymPy.
-They contain the exponential Kähler factor, covariant derivatives of the
-superpotential, the inverse complex-structure metric factor, and the number
-of complex-structure moduli. The suffix `_2` identifies the bundled model.
+### Symbolic inputs
 
-### Generated solution CSV files
+The seven CSV files use Mathematica-style expressions parsed with SymPy.
+They specify the exponential Kähler factor, covariant derivatives of the
+superpotential, inverse complex-structure metric factor, and number of
+complex-structure moduli. The `_2` suffix identifies the bundled model.
 
-For the default model, the columns are:
+### Generated Parquet parts
+
+The columns are:
 
 ```text
 FunctionValue, taur, taui, Z1r, Z1i, Z2r, Z2i,
 m1, m2, m3, n1, n2, n3
 ```
 
-`FunctionValue` is the absolute potential value returned by the optimizer's
-objective. The `r` and `i` suffixes denote real and imaginary parts;
-`m*` and `n*` label flux components. Multiple solutions may be recorded
-for the same flux choice. Check `run.log` for errors before interpreting
-the output; interrupted runs may contain a trailing status message.
+The first seven columns are `float64`; the six flux columns are `int16`.
+`FunctionValue` is the absolute value returned by the objective wrapper.
+The `r` and `i` suffixes denote real and imaginary parts.
+
+Each flux choice receives ten independent random initial guesses, with
+real parts uniform in `[-2, 2]` and imaginary parts uniform in `[0.1, 2]`.
+The worker uses SLSQP with `tol=1e-5` and imaginary-part lower bounds of
+`1e-5`. It accepts endpoints when the solver reports success and all
+components of its gradient wrapper are at most 0.1 in absolute value.
+Within each flux choice, accepted endpoints are deduplicated by rounding
+the potential and coordinates to two significant digits. Stored values
+retain their unrounded precision.
+
+The scan does not apply the later LCS cut `Im Z1, Im Z2 >= 1`, classify
+SUSY solutions, map the axio-dilaton to the modular fundamental domain,
+or test the Hessian for local-minimum stability.
+
+### Known numerical limitation
+
+The copied worker returns `1e200` when objective evaluation fails or is
+nonfinite, and returns an entire zero gradient vector if any gradient
+component is nonfinite or an exception occurs. Consequently, solver success
+and the gradient-wrapper check can accept invalid endpoints. An objective
+value different from `1e200` does not exclude this failure mode.
+
+Reevaluate saved endpoints with explicit failure reporting and check finite
+potential, finite gradient, and the gradient threshold before interpreting
+them as solutions. In the audited 46,388,212-row dataset, 83,959 anomalous
+LCS endpoints coincided with the analysis notebook's `V >= 1e10` exclusion;
+that dataset-specific observation does not make this cutoff a general
+replacement for endpoint validation. The raw Parquet files produced here
+do not apply that exclusion.
 
 ## Validation status
 
-This is a release-preparation snapshot. Checks cover Python syntax, imports
-in the reduced file tree, `gradient_P.py --help`, symbolic-input loading
-and potential construction, and a small flux-enumeration check.
-Full production scans and reproduction of paper results have not been
-validated for this distribution.
+This update checks source/input equality to the StringVacua snapshot,
+Python syntax and imports, the CLI help, symbolic-input construction,
+flux assignments and enumeration counts, and Parquet write/read behavior.
+A bounded integration run checks the scan with a reduced flux iterator.
+Full production scans and reproduction of the manuscript's results are
+not performed as part of this update.
 
-The numerical logic of `gradient_P.py` and its optimization worker is
-unchanged. Random initialization is used, and dependency versions are not
-pinned to a publication reproduction environment.
+Initial guesses are random; dependency versions are not pinned to a
+publication reproduction environment. The numerical fallback behavior
+described above is preserved in this snapshot.
 
 ## Citation
 
 If you use this repository, please cite the companion manuscript.
-The arXiv identifier below is a placeholder and must be replaced with the
-assigned identifier before using this entry in a publication.
+Replace the placeholder arXiv identifier with the assigned identifier
+before using this entry in a publication.
 
 ```bibtex
 @article{Hamada:2026FluxVacua,
