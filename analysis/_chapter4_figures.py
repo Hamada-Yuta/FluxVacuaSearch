@@ -95,31 +95,6 @@ def rank_pair(output, stem, panels, colorbar_label):
             'all_axis_labels_inside_page': True, 'figure_size_inches': [width, height]}
 
 
-def potential_histograms(data, output):
-    records = {}
-    for stem, limits, title in [('hist_V', (0, 2000), 'Histogram of $V$'),
-                                ('hist_V_zoomup', (0, 5e-5), 'Histogram of $V$ (zoomed-in)')]:
-        values = data.loc[data.FunctionValue.between(*limits), 'FunctionValue']
-        fig, ax = plt.subplots(figsize=(8, 5))
-        heights, edges, _ = ax.hist(values, bins=50)
-        ax.set(xlim=limits, yscale='log')
-        ax.set_xlabel('$V$', fontsize=18)
-        ax.set_ylabel('count (log scale)', fontsize=18)
-        ax.set_title(title, fontsize=18)
-        ax.tick_params(axis='both', labelsize=14)
-        fig.tight_layout()
-        assert int(heights.sum()) == len(values)
-        # Keep the laid-out canvas: PDF tight-bbox handling can clip the
-        # y-label when the x-axis offset is expressed in scientific notation.
-        save(fig, output, stem, tight=False)
-        pd.DataFrame({'left_edge': edges[:-1], 'right_edge': edges[1:],
-                      'count': heights.astype(int)}).to_csv(output/f'{stem}_bins.csv', index=False)
-        records[stem] = {'displayed': len(values), 'outside': len(data)-len(values),
-                         'selection_range': limits, 'bins': 50,
-                         'bin_definition': 'Equal width across selected minimum and maximum, as in manuscript'}
-    return records
-
-
 def density(frame, output, stem, x, y, xlim, ylim, labelmap, susy=False):
     selected = frame[x].between(*xlim) & frame[y].between(*ylim)
     sub = frame.loc[selected]

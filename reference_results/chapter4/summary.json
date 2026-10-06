@@ -2604,28 +2604,6 @@
     "pyarrow": "23.0.0",
     "matplotlib": "3.10.3"
   },
-  "linear_histograms": {
-    "hist_V": {
-      "displayed": 1296536,
-      "outside": 97,
-      "selection_range": [
-        0,
-        2000
-      ],
-      "bins": 50,
-      "bin_definition": "Equal width across selected minimum and maximum, as in manuscript"
-    },
-    "hist_V_zoomup": {
-      "displayed": 129507,
-      "outside": 1167126,
-      "selection_range": [
-        0,
-        5e-05
-      ],
-      "bins": 50,
-      "bin_definition": "Equal width across selected minimum and maximum, as in manuscript"
-    }
-  },
   "instanton": {
     "median_ratio": 3.493929973371698e-05,
     "maximum_ratio": 0.0004939058992565873,
@@ -2653,8 +2631,6 @@
     "correlation_matrix_SUSY.pdf",
     "correlation_matrix_Z1i_Z2i_leq50.pdf",
     "correlation_matrix_reliable.pdf",
-    "hist_V.pdf",
-    "hist_V_zoomup.pdf",
     "rank_correlation_SUSY.pdf",
     "rank_correlation_kendall.pdf",
     "rank_correlation_spearman.pdf"

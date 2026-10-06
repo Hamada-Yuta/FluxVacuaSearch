@@ -167,7 +167,6 @@ def main(argv=None):
                 'excluded': len(full)-len(subset), 'excluded_percent': 100*(len(full)-len(subset))/len(full),
                 **pair_coefficients(subset, x, y)})
     pd.DataFrame(summary['tail_cut_sensitivity']).to_csv(args.output/'tail_cut_sensitivity.csv', index=False)
-    summary['linear_histograms'] = figures.potential_histograms(data, args.output)
     for stem, group, title, colorbar in [
         ('correlation_matrix_reliable', 'all', 'Correlation matrix (reliable solutions)', False),
         ('correlation_matrix_Z1i_Z2i_leq50', 'bounded', r'Correlation matrix for $1 \leq \mathrm{Im}\,Z_1,\,\mathrm{Im}\,Z_2 \leq 50$', True),
@@ -196,7 +195,13 @@ def main(argv=None):
     ratios = correction_ratio(data)
     summary['instanton'] = figures.instanton_histogram(ratios, args.output)
     pd.DataFrame(coefficient_records()).to_csv(args.output/'instanton_coefficients.csv', index=False)
-    summary['generated_pdfs'] = sorted(p.name for p in args.output.glob('*.pdf'))
+    # List outputs from this run, excluding stale files from earlier analyses.
+    summary['generated_pdfs'] = sorted([
+        'correlation_matrix_reliable.pdf', 'correlation_matrix_Z1i_Z2i_leq50.pdf',
+        'correlation_matrix_SUSY.pdf', 'F_correction_histogram.pdf',
+        *[f'{stem}.pdf' for stem in summary['figures']],
+        *[f'{stem}.pdf' for stem in summary['density_windows']],
+    ])
     summary['elapsed_seconds'] = time.monotonic()-start
     (args.output/'summary.json').write_text(json.dumps(summary, indent=2)+'\n')
     print(json.dumps({'counts': summary['counts'], 'instanton': summary['instanton'],

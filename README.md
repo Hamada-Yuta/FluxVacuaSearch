@@ -65,7 +65,7 @@ required to be committed to Git.
 
 | Entry point | Coverage |
 |---|---|
-| `analysis.chapter4` | Full and SUSY sample summaries; Pearson, Spearman and Kendall correlations; restricted-tail comparisons; moduli densities; linear potential histograms; direct instanton corrections through degree 7. |
+| `analysis.chapter4` | Full and SUSY sample summaries; Pearson, Spearman and Kendall correlations; restricted-tail comparisons; moduli densities; direct instanton corrections through degree 7. |
 | `analysis.flux_statistics` | Logarithmic potential distribution; low-potential rates per flux; invariant multiplicities; orbit counts; shared-input diagnostics and mixed-label examples. |
 | `analysis.classification` | Feature comparisons, the main classifier, ranking and budget metrics, learning curves, threshold robustness, SHAP summaries and grouped-split comparisons. |
 | `analysis.regression` | Four log-potential regressions and twelve raw-flux/invariant moduli regressions. |
