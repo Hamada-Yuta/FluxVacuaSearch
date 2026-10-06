@@ -1,0 +1,277 @@
+{
+  "source": "data/selected_solutions.parquet",
+  "save_predictions": false,
+  "source_row_convention": "Zero-based physical Parquet row position; no reordering before splitting",
+  "source_rows": 1296633,
+  "zero_flux_rows_excluded": 0,
+  "logV_rows": 1296633,
+  "logV_train_rows": 972474,
+  "logV_test_rows": 324159,
+  "moduli_rows": 127241,
+  "moduli_train_rows": 95430,
+  "moduli_test_rows": 31811,
+  "lowV_threshold": 3.1622776601683795e-05,
+  "split": {
+    "test_size": 0.25,
+    "random_state": 0,
+    "stratify": null,
+    "unit": "solution row",
+    "same_rows_across_models": true
+  },
+  "interpretation": "Solution-weighted interpolation; multiple solutions per flux retained; row split can share fluxes and invariant tuples",
+  "feature_order": {
+    "raw6": [
+      "m1",
+      "m2",
+      "m3",
+      "n1",
+      "n2",
+      "n3"
+    ],
+    "invariants9": [
+      "omega12",
+      "omega13",
+      "omega23",
+      "G11",
+      "G12",
+      "G13",
+      "G22",
+      "G23",
+      "G33"
+    ],
+    "moduli12": [
+      "taur",
+      "taui",
+      "Z1r",
+      "Z1i",
+      "Z2r",
+      "Z2i",
+      "signed_log_taur",
+      "signed_log_taui",
+      "signed_log_Z1r",
+      "signed_log_Z1i",
+      "signed_log_Z2r",
+      "signed_log_Z2i"
+    ]
+  },
+  "float32_checks": {
+    "raw6": {
+      "max_absolute_float64": 16.0,
+      "max_cast_absolute_difference": 0.0,
+      "finite_after_float32_cast": true
+    },
+    "invariants9": {
+      "max_absolute_float64": 274.0,
+      "max_cast_absolute_difference": 0.0,
+      "finite_after_float32_cast": true
+    },
+    "moduli12": {
+      "max_absolute_float64": 91657400854064.8,
+      "max_cast_absolute_difference": 3037647.203125,
+      "finite_after_float32_cast": true
+    }
+  },
+  "base_parameters": {
+    "max_depth": 8,
+    "min_child_weight": 5,
+    "subsample": 0.8,
+    "colsample_bytree": 0.8,
+    "random_state": 0,
+    "n_jobs": 2,
+    "tree_method": "hist",
+    "objective": "reg:squarederror"
+  },
+  "logV_parameters": {
+    "n_estimators": 300,
+    "learning_rate": 0.15
+  },
+  "moduli_parameters": {
+    "n_estimators": 400,
+    "learning_rate": 0.1
+  },
+  "versions": {
+    "python": "3.11.3",
+    "numpy": "2.0.0",
+    "pandas": "3.0.0",
+    "sklearn": "1.8.0",
+    "xgboost": "3.0.5",
+    "matplotlib": "3.10.3"
+  },
+  "logV": {
+    "invariants9": {
+      "r2": 0.8861873995140326,
+      "mae": 0.37977001258063564,
+      "feature_count": 9,
+      "seconds": 8.935696840286255
+    },
+    "invariants9_moduli12": {
+      "r2": 0.9088102172498534,
+      "mae": 0.34476846861919425,
+      "feature_count": 21,
+      "seconds": 13.982875108718872
+    },
+    "raw6_moduli12": {
+      "r2": 0.8440349539782848,
+      "mae": 0.4828828095108881,
+      "feature_count": 18,
+      "seconds": 11.383244037628174
+    },
+    "raw6_invariants9_moduli12": {
+      "r2": 0.9079885010323665,
+      "mae": 0.3459947249869756,
+      "feature_count": 27,
+      "seconds": 13.654251098632812
+    }
+  },
+  "moduli": {
+    "taur": {
+      "raw6": {
+        "r2": 0.9498525553385895,
+        "mae": 0.08815035399837912,
+        "median_relative_error": 0.09395892134724067,
+        "physical_mae": 0.273812584385665,
+        "zero_targets_excluded_from_relative_error": 0,
+        "relative_error_denominator": "abs(true value); exact zeros omitted; no epsilon floor",
+        "transform": "sign(x)*ln(1+abs(x))",
+        "seconds": 1.4648776054382324
+      },
+      "invariants9": {
+        "r2": 0.7331333395742228,
+        "mae": 0.29649343841076425,
+        "median_relative_error": 0.4427511576141655,
+        "physical_mae": 0.7471246083378223,
+        "zero_targets_excluded_from_relative_error": 0,
+        "relative_error_denominator": "abs(true value); exact zeros omitted; no epsilon floor",
+        "transform": "sign(x)*ln(1+abs(x))",
+        "seconds": 1.6650786399841309
+      }
+    },
+    "taui": {
+      "raw6": {
+        "r2": 0.9646057187152806,
+        "mae": 0.07936271771125707,
+        "median_relative_error": 0.12498438609513239,
+        "physical_mae": 0.42129956737003016,
+        "zero_targets_excluded_from_relative_error": 0,
+        "relative_error_denominator": "abs(true value); exact zeros omitted; no epsilon floor",
+        "transform": "log10",
+        "seconds": 1.4290821552276611
+      },
+      "invariants9": {
+        "r2": 0.7044713418188556,
+        "mae": 0.23794884450798184,
+        "median_relative_error": 0.38622889069432575,
+        "physical_mae": 0.9163069171865382,
+        "zero_targets_excluded_from_relative_error": 0,
+        "relative_error_denominator": "abs(true value); exact zeros omitted; no epsilon floor",
+        "transform": "log10",
+        "seconds": 1.5650889873504639
+      }
+    },
+    "Z1r": {
+      "raw6": {
+        "r2": 0.8935173918809876,
+        "mae": 0.14622733282480965,
+        "median_relative_error": 0.2525317952191803,
+        "physical_mae": 0.27836165636537474,
+        "zero_targets_excluded_from_relative_error": 0,
+        "relative_error_denominator": "abs(true value); exact zeros omitted; no epsilon floor",
+        "transform": "sign(x)*ln(1+abs(x))",
+        "seconds": 1.4972481727600098
+      },
+      "invariants9": {
+        "r2": 0.9683709823814012,
+        "mae": 0.07043102657016022,
+        "median_relative_error": 0.10768795712612825,
+        "physical_mae": 0.13641800504553628,
+        "zero_targets_excluded_from_relative_error": 0,
+        "relative_error_denominator": "abs(true value); exact zeros omitted; no epsilon floor",
+        "transform": "sign(x)*ln(1+abs(x))",
+        "seconds": 1.6280021667480469
+      }
+    },
+    "Z1i": {
+      "raw6": {
+        "r2": 0.7623711683145604,
+        "mae": 0.05265784351522433,
+        "median_relative_error": 0.08670281683831405,
+        "physical_mae": 0.23430423898560945,
+        "zero_targets_excluded_from_relative_error": 0,
+        "relative_error_denominator": "abs(true value); exact zeros omitted; no epsilon floor",
+        "transform": "log10",
+        "seconds": 1.255748987197876
+      },
+      "invariants9": {
+        "r2": 0.9136419761839484,
+        "mae": 0.02920450869588725,
+        "median_relative_error": 0.04555647276930945,
+        "physical_mae": 0.1278569228589618,
+        "zero_targets_excluded_from_relative_error": 0,
+        "relative_error_denominator": "abs(true value); exact zeros omitted; no epsilon floor",
+        "transform": "log10",
+        "seconds": 1.4888849258422852
+      }
+    },
+    "Z2r": {
+      "raw6": {
+        "r2": 0.9260179733564915,
+        "mae": 0.19696379041019088,
+        "median_relative_error": 0.20070859191495274,
+        "physical_mae": 0.6447877910232371,
+        "zero_targets_excluded_from_relative_error": 0,
+        "relative_error_denominator": "abs(true value); exact zeros omitted; no epsilon floor",
+        "transform": "sign(x)*ln(1+abs(x))",
+        "seconds": 1.2896149158477783
+      },
+      "invariants9": {
+        "r2": 0.9729808377983616,
+        "mae": 0.1054133558995951,
+        "median_relative_error": 0.100317621124733,
+        "physical_mae": 0.3544420565913469,
+        "zero_targets_excluded_from_relative_error": 0,
+        "relative_error_denominator": "abs(true value); exact zeros omitted; no epsilon floor",
+        "transform": "sign(x)*ln(1+abs(x))",
+        "seconds": 1.564046859741211
+      }
+    },
+    "Z2i": {
+      "raw6": {
+        "r2": 0.8304165328365306,
+        "mae": 0.07894779600926757,
+        "median_relative_error": 0.12705371948740585,
+        "physical_mae": 0.5656082027940346,
+        "zero_targets_excluded_from_relative_error": 0,
+        "relative_error_denominator": "abs(true value); exact zeros omitted; no epsilon floor",
+        "transform": "log10",
+        "seconds": 1.1372380256652832
+      },
+      "invariants9": {
+        "r2": 0.9312534535194952,
+        "mae": 0.04496344130901134,
+        "median_relative_error": 0.0672355681028208,
+        "physical_mae": 0.31881267734873836,
+        "zero_targets_excluded_from_relative_error": 0,
+        "relative_error_denominator": "abs(true value); exact zeros omitted; no epsilon floor",
+        "transform": "log10",
+        "seconds": 1.566061019897461
+      }
+    }
+  },
+  "figure": {
+    "right_panel_target": "Z2r",
+    "all_test_rows_plotted": 31811
+  },
+  "elapsed_seconds": 68.93711018562317,
+  "exact_flux_overlap": {
+    "logV": {
+      "test_rows": 324159,
+      "test_rows_sharing_exact_flux_with_training": 44627,
+      "test_shared_flux_fraction": 0.1376700939970817
+    },
+    "moduli": {
+      "test_rows": 31811,
+      "test_rows_sharing_exact_flux_with_training": 15527,
+      "test_shared_flux_fraction": 0.4881016000754456
+    }
+  }
+}

@@ -18,3 +18,9 @@ logs/
 *.npz
 # Development notebooks and local scratch files
 .ipynb_checkpoints/
+
+# Recomputed analysis products
+results/
+# Distributed adopted data and recorded split identities
+!data/selected_solutions/part-*.parquet
+!reference_results/**/*.npz

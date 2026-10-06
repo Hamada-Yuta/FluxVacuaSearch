@@ -1,14 +1,13 @@
 # Data analysis of millions of Type IIB flux vacua
 
-This repository contains the `gradient_P.py` scan and the supporting Python
-modules and symbolic inputs from the StringVacua version used for the
-fixed-`(m1, n1)` flux enumeration and Parquet output.
+This repository contains the flux scan, the selected sample used in Chapters 4
+and 5, and executable statistical and machine-learning analyses for the manuscript.
 
 It is intended as a companion repository to the manuscript:
 
 **Data analysis of millions of Type IIB flux vacua**  
 Yuta Hamada, Yuma Uematsu, and Masahito Yamazaki  
-**arXiv:** `26XX.XXXXX` (placeholder; to be replaced upon submission).
+An arXiv identifier will be added after submission.
 
 The bundled model `i = 2` is the model studied in the manuscript: the
 **degree-18 Calabi–Yau hypersurface in the weighted projective space
@@ -19,51 +18,113 @@ effective complex-structure moduli, $Z_1$ and $Z_2$. Accordingly, the value
 `2` in `Potential_data/h21_2.csv` counts the effective moduli used by the
 scan, rather than the full hypersurface's $h^{2,1} = 272$.
 
+## Reproduce Chapters 4 and 5
+
+The adopted dataset contains **1,296,633 selected numerical candidates** in
+13 columns. All analyses use this same sample. The operational SUSY label is
+$V < 10^{-4.5}$, which selects **127,241 rows**; the remaining **1,169,392 rows**
+form its complement. These numerical labels and the recorded selection criteria
+have the scope stated in the manuscript.
+
+### Install the analysis environment
+
+The reference run used **Python 3.11.3**, **XGBoost 3.0.5** and
+**scikit-learn 1.8.0**. From the repository root:
+
+```bash
+python3.11 -m venv .venv
+source .venv/bin/activate
+python -m pip install -r requirements-analysis.txt
+python -m analysis.prepare_data
+```
+
+The last command concatenates the two distributed Parquet parts in their
+explicit file order and writes `data/selected_solutions.parquet`. Splitting the
+file for distribution does not change any value, dtype or row position. The
+complete adopted dataset is in Git; no scan or external data download is needed.
+On macOS, XGBoost's CPU runtime may require the OpenMP library provided by
+`brew install libomp`.
+
+### Run the analyses
+
+```bash
+python -m analysis.chapter4 --data data/selected_solutions.parquet --output results/chapter4
+python -m analysis.flux_statistics --data data/selected_solutions.parquet --output results/flux_statistics
+python -m analysis.classification --data data/selected_solutions.parquet --output results/classification
+python -m analysis.regression --data data/selected_solutions.parquet --output results/regression
+python -m analysis.conditional_regression --data data/selected_solutions.parquet --output results/conditional_regression
+```
+
+Every model is fitted by these commands. They do not load previous predictions
+or private working directories. Model fitting uses two CPU threads. Outputs
+include plots, numerical tables, settings, software versions, and the sample
+indices used for training, validation, testing and auxiliary subsampling.
+Individual predictions are optional: add `--save-predictions` to the three ML
+commands if they are needed. Generated results and fitted models are not
+required to be committed to Git.
+
+| Entry point | Coverage |
+|---|---|
+| `analysis.chapter4` | Full and SUSY sample summaries; Pearson, Spearman and Kendall correlations; restricted-tail comparisons; moduli densities; linear potential histograms; direct instanton corrections through degree 7. |
+| `analysis.flux_statistics` | Logarithmic potential distribution; low-potential rates per flux; invariant multiplicities; orbit counts; shared-input diagnostics and mixed-label examples. |
+| `analysis.classification` | Feature comparisons, the main classifier, ranking and budget metrics, learning curves, threshold robustness, SHAP summaries and grouped-split comparisons. |
+| `analysis.regression` | Four log-potential regressions and twelve raw-flux/invariant moduli regressions. |
+| `analysis.conditional_regression` | Thirteen conditional random-forest models each for the full and SUSY samples, feature importances, tail diagnostics and an independent check of the $W_0$ formula. |
+
+### Saved reference results and split identities
+
+`reference_results/` records the numerical summaries from a complete rerun of
+these scripts against the distributed dataset. It also includes compressed
+split indices and model configurations. The scripts recreate these indices
+from the recorded seeds and dataset row order; the saved indices make the
+original assignment directly inspectable.
+
+- A source row is the **zero-based physical row position** in the concatenated
+  Parquet table. Preserve its order and values when rerunning the analyses.
+- Classification and forward regression save their source-row splits in NPZ
+  files. Auxiliary grouped, learning-curve and SHAP samples are also recorded.
+- Conditional regression first sorts each population stably by `FunctionValue`.
+  Its NPZ files contain both positions within that sorted population and the
+  corresponding original source-row mappings.
+- The main random seeds are 0. The matched grouped-comparison test subsample
+  uses seed 1. Per-analysis settings record these choices explicitly.
+- Numerical summaries are stored as JSON/CSV, with model settings and software
+  versions alongside them. Individual predictions are regenerated on request.
+
+The statistical unit is one retained solution row, including multiple rows
+with the same flux. The raw saved coordinates are used; the distribution file
+has not been remapped into a fundamental domain. Exactly-zero fluxes are
+excluded only where the corresponding analysis specifies this. Tail and plot
+windows are explicit in the scripts and metadata.
+
+The selected sample suffices to reproduce the reported statistics and ML
+analyses. It does not reconstruct the original random scan, or rerun the
+selection/Hessian/deduplication procedure from all raw endpoints. In particular,
+the number of scanned flux orbits used as the zero-discovery denominator is a
+recorded scan constant, not inferred from the selected rows. Floating-point
+results may differ slightly on different platforms or library builds.
+
 ## Repository layout
 
 ```text
 FluxVacuaSearch/
 ├── README.md
-├── requirements.txt
-├── gradient_P.py
-├── Potential_data/
-│   ├── h21_2.csv
-│   ├── EK_2.csv
-│   ├── DtauW_2.csv
-│   ├── DtaubW_2.csv
-│   ├── DZW_2.csv
-│   ├── DZbW_2.csv
-│   └── KZZb_2.csv
-└── utils/
-    ├── __init__.py
-    ├── import_helpers.py
-    ├── import_wrappers.py
-    ├── logger_setup.py
-    ├── optimization_worker.py
-    └── variable_generator.py
+├── requirements.txt                 # original scan dependencies
+├── requirements-analysis.txt        # pinned analysis environment
+├── gradient_P.py                    # original scan entry point
+├── Potential_data/                  # seven symbolic inputs for model 2
+├── utils/                           # scan utilities
+├── data/selected_solutions/         # two ordered Parquet parts
+├── analysis/                        # portable analysis entry points and helpers
+└── reference_results/               # summaries, configurations and split indices
 ```
 
-| Path | Purpose |
-|---|---|
-| `gradient_P.py` | Construct the scalar potential, enumerate fluxes for one fixed pair, minimize it with SLSQP, and write Parquet parts. |
-| `utils/optimization_worker.py` | Perform ten starts per flux choice and return distinct accepted endpoints. |
-| `utils/import_helpers.py`, `utils/import_wrappers.py` | Read the symbolic input expressions. |
-| `utils/variable_generator.py`, `utils/logger_setup.py` | Construct symbols and configure logging. |
-| `Potential_data/*_2.csv` | Seven symbolic input files for model 2; these are not sampled vacuum solutions. |
+`Potential_data/*_2.csv` are symbolic expressions, not sampled solutions. Only
+model 2 is supported by the bundled scan: its flux enumeration assumes three
+components in each of `m` and `n`. The original scan and symbolic inputs are
+retained separately from the analysis code below.
 
-Only the utility modules required by `gradient_P.py` are included:
-`import_wrappers.py`, its dependency `import_helpers.py`, `logger_setup.py`,
-`optimization_worker.py`, and `variable_generator.py`. The package initializer
-`__init__.py` does not import any additional helpers. Flux enumeration is
-defined directly in `gradient_P.py`.
-
-The main script, retained utility modules, requirements, and seven input
-CSV files are unchanged from the StringVacua snapshot, except for the
-minimal package initializer. Python caches, logs, and generated datasets
-are excluded. Only model 2 is supported by the bundled scan: its flux
-enumeration explicitly assumes three components in each of `m` and `n`.
-
-## Quick start
+## Running a fresh scan
 
 ### Set up Python
 
@@ -241,26 +302,15 @@ This update checks source/input equality to the StringVacua snapshot,
 Python syntax and imports, the CLI help, symbolic-input construction,
 flux assignments and enumeration counts, and Parquet write/read behavior.
 A bounded integration run checks the scan with a reduced flux iterator.
-Full production scans and reproduction of the manuscript's results are
-not performed as part of this update.
+A fresh full production scan was not run as part of packaging this repository.
+The selected-sample analyses above were rerun and checked against the manuscript's
+existing numerical results.
 
-Initial guesses are random; dependency versions are not pinned to a
-publication reproduction environment. The numerical fallback behavior
+Initial guesses in the scan are random and are not seeded. The original scan
+requirements are unpinned; the separate analysis environment is pinned. The numerical fallback behavior
 described above is preserved in this snapshot.
 
 ## Citation
 
-If you use this repository, please cite the companion manuscript.
-Replace the placeholder arXiv identifier with the assigned identifier
-before using this entry in a publication.
-
-```bibtex
-@article{Hamada:2026FluxVacua,
-    author = "Hamada, Yuta and Uematsu, Yuma and Yamazaki, Masahito",
-    title = "{Data analysis of millions of Type IIB flux vacua}",
-    eprint = "26XX.XXXXX",
-    archivePrefix = "arXiv",
-    year = "2026",
-    note = "arXiv identifier is a placeholder"
-}
-```
+Please cite the companion manuscript when using the data or code. Its official
+bibliographic entry will be added after an arXiv or journal record is available.

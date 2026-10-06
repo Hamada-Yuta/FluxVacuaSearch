@@ -1,0 +1,70 @@
+{
+  "main_row_split": {
+    "rows_disjoint": true,
+    "raw_flux": {
+      "shared_test_rows": 44632,
+      "test_rows": 324159,
+      "shared_test_fraction": 0.13768551852640218,
+      "shared_test_positive_rows": 17140,
+      "test_positive_rows": 31810
+    },
+    "invariants": {
+      "shared_test_rows": 53115,
+      "test_rows": 324159,
+      "shared_test_fraction": 0.16385477497154174,
+      "shared_test_positive_rows": 18258,
+      "test_positive_rows": 31810
+    }
+  },
+  "whole_tuple_split": {
+    "rows_disjoint": true,
+    "raw_flux": {
+      "shared_test_rows": 0,
+      "test_rows": 324189,
+      "shared_test_fraction": 0.0,
+      "shared_test_positive_rows": 0,
+      "test_positive_rows": 31633
+    },
+    "invariants": {
+      "shared_test_rows": 0,
+      "test_rows": 324189,
+      "shared_test_fraction": 0.0,
+      "shared_test_positive_rows": 0,
+      "test_positive_rows": 31633
+    }
+  },
+  "matched_random_rows": {
+    "rows_disjoint": true,
+    "raw_flux": {
+      "shared_test_rows": 44630,
+      "test_rows": 324159,
+      "shared_test_fraction": 0.13767934871467397,
+      "shared_test_positive_rows": 17140,
+      "test_positive_rows": 31810
+    },
+    "invariants": {
+      "shared_test_rows": 53113,
+      "test_rows": 324159,
+      "shared_test_fraction": 0.16384860515981356,
+      "shared_test_positive_rows": 18258,
+      "test_positive_rows": 31810
+    }
+  },
+  "matched_invariant_groups": {
+    "rows_disjoint": true,
+    "raw_flux": {
+      "shared_test_rows": 0,
+      "test_rows": 324159,
+      "shared_test_fraction": 0.0,
+      "shared_test_positive_rows": 0,
+      "test_positive_rows": 31630
+    },
+    "invariants": {
+      "shared_test_rows": 0,
+      "test_rows": 324159,
+      "shared_test_fraction": 0.0,
+      "shared_test_positive_rows": 0,
+      "test_positive_rows": 31630
+    }
+  }
+}

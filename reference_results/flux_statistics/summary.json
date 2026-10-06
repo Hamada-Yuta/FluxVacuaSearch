@@ -1,0 +1,854 @@
+{
+  "source": "data/selected_solutions.parquet",
+  "rows": 1296633,
+  "columns": [
+    "FunctionValue",
+    "taur",
+    "taui",
+    "Z1r",
+    "Z1i",
+    "Z2r",
+    "Z2i",
+    "m1",
+    "m2",
+    "m3",
+    "n1",
+    "n2",
+    "n3"
+  ],
+  "weighting": "Every saved solution/row has equal weight; this is not one row or equal weight per distinct flux choice.",
+  "lowV": {
+    "condition": "FunctionValue < 10**(-4.5)",
+    "threshold": 3.1622776601683795e-05,
+    "rows": 127241,
+    "fraction": 0.09813185380905777
+  },
+  "SUSY": {
+    "condition": "FunctionValue < 10**(-4.5)",
+    "rows": 127241,
+    "fraction": 0.09813185380905777
+  },
+  "V": {
+    "finite": 1296633,
+    "nonfinite": 0,
+    "zero": 0,
+    "negative": 0,
+    "positive": 1296633,
+    "min": 2.253910868634659e-10,
+    "max": 12724971.590266954,
+    "quantiles": {
+      "0": 2.253910868634659e-10,
+      "0.001": 4.185456689772434e-08,
+      "0.01": 2.594546497390987e-07,
+      "0.05": 2.0730456814771814e-06,
+      "0.1": 5.156055457056911e-05,
+      "0.25": 18.391785590995745,
+      "0.5": 65.26999266800209,
+      "0.75": 114.3540404592653,
+      "0.9": 160.71933535165806,
+      "0.95": 192.51128363235003,
+      "0.99": 259.3693843796234,
+      "0.999": 405.7845190654934,
+      "1": 12724971.590266954
+    }
+  },
+  "log10V_positive": {
+    "rows": 1296633,
+    "excluded_nonpositive": 0,
+    "min": -9.647063262214271,
+    "max": 7.104656821405333,
+    "quantiles": {
+      "0": -9.647063262214271,
+      "0.001": -7.378257148245347,
+      "0.01": -6.585938541850873,
+      "0.05": -5.683391127729749,
+      "0.1": -4.287682421566797,
+      "0.25": 1.264623895343096,
+      "0.5": 1.8147135639102188,
+      "0.75": 2.058251514095043,
+      "0.9": 2.206068127736525,
+      "0.95": 2.2844561898217046,
+      "0.99": 2.4139187112147162,
+      "0.999": 2.6082954734717467,
+      "1": 7.104656821405333
+    }
+  },
+  "log10_max_V_1e_minus16": {
+    "rows_below_floor": 0,
+    "quantiles": {
+      "0": -9.647063262214271,
+      "0.001": -7.378257148245347,
+      "0.01": -6.585938541850873,
+      "0.05": -5.683391127729749,
+      "0.1": -4.287682421566797,
+      "0.25": 1.264623895343096,
+      "0.5": 1.8147135639102188,
+      "0.75": 2.058251514095043,
+      "0.9": 2.206068127736525,
+      "0.95": 2.2844561898217046,
+      "0.99": 2.4139187112147162,
+      "0.999": 2.6082954734717467,
+      "1": 7.104656821405333
+    }
+  },
+  "nonfinite_by_column": {
+    "FunctionValue": 0,
+    "taur": 0,
+    "taui": 0,
+    "Z1r": 0,
+    "Z1i": 0,
+    "Z2r": 0,
+    "Z2i": 0,
+    "m1": 0,
+    "m2": 0,
+    "m3": 0,
+    "n1": 0,
+    "n2": 0,
+    "n3": 0
+  },
+  "physical_cuts": {
+    "all": {
+      "rows": 1296633,
+      "LCS_Z1i_and_Z2i_ge1": 1296633,
+      "stored_taui_gt1": 456709,
+      "both": 456709,
+      "stored_taui_positive": 1296633
+    },
+    "lowV": {
+      "rows": 127241,
+      "LCS_Z1i_and_Z2i_ge1": 127241,
+      "stored_taui_gt1": 40648,
+      "both": 40648,
+      "stored_taui_positive": 127241
+    },
+    "SUSY": {
+      "rows": 127241,
+      "LCS_Z1i_and_Z2i_ge1": 127241,
+      "stored_taui_gt1": 40648,
+      "both": 40648,
+      "stored_taui_positive": 127241
+    }
+  },
+  "V_quantile_trim": {
+    "lower_q01": 2.594546497390987e-07,
+    "upper_q99": 259.3693843796234,
+    "inclusive": true,
+    "rows_retained": 1270699,
+    "lowV_retained": 114274,
+    "lowV_removed": 12967,
+    "SUSY_retained": 114274
+  },
+  "N_found": [
+    {
+      "N_found": 1,
+      "n_orbits": 1063963,
+      "active_orbit_fraction_percent": 92.68390205828139,
+      "scanned_orbit_fraction_percent": 3.8928810194668384,
+      "n_endpoints": 1063963
+    },
+    {
+      "N_found": 2,
+      "n_orbits": 60678,
+      "active_orbit_fraction_percent": 5.285779495238461,
+      "scanned_orbit_fraction_percent": 0.22201170012416674,
+      "n_endpoints": 121356
+    },
+    {
+      "N_found": 3,
+      "n_orbits": 11968,
+      "active_orbit_fraction_percent": 1.0425559345893716,
+      "scanned_orbit_fraction_percent": 0.04378911676531902,
+      "n_endpoints": 35904
+    },
+    {
+      "N_found": 4,
+      "n_orbits": 4635,
+      "active_orbit_fraction_percent": 0.403763933557966,
+      "scanned_orbit_fraction_percent": 0.016958769736568655,
+      "n_endpoints": 18540
+    },
+    {
+      "N_found": 5,
+      "n_orbits": 2367,
+      "active_orbit_fraction_percent": 0.20619400878785452,
+      "scanned_orbit_fraction_percent": 0.008660497943140886,
+      "n_endpoints": 11835
+    },
+    {
+      "N_found": 6,
+      "n_orbits": 1248,
+      "active_orbit_fraction_percent": 0.10871572579942645,
+      "scanned_orbit_fraction_percent": 0.004566244796383534,
+      "n_endpoints": 7488
+    },
+    {
+      "N_found": 7,
+      "n_orbits": 764,
+      "active_orbit_fraction_percent": 0.06655353726823864,
+      "scanned_orbit_fraction_percent": 0.0027953613977860737,
+      "n_endpoints": 5348
+    },
+    {
+      "N_found": 8,
+      "n_orbits": 490,
+      "active_orbit_fraction_percent": 0.042684860289838915,
+      "scanned_orbit_fraction_percent": 0.0017928364985800734,
+      "n_endpoints": 3920
+    },
+    {
+      "N_found": 9,
+      "n_orbits": 327,
+      "active_orbit_fraction_percent": 0.028485610846484336,
+      "scanned_orbit_fraction_percent": 0.0011964439490524165,
+      "n_endpoints": 2943
+    },
+    {
+      "N_found": 10,
+      "n_orbits": 208,
+      "active_orbit_fraction_percent": 0.01811928763323774,
+      "scanned_orbit_fraction_percent": 0.0007610407993972557,
+      "n_endpoints": 2080
+    },
+    {
+      "N_found": 11,
+      "n_orbits": 148,
+      "active_orbit_fraction_percent": 0.012892570046726856,
+      "scanned_orbit_fraction_percent": 0.0005415097995711243,
+      "n_endpoints": 1628
+    },
+    {
+      "N_found": 12,
+      "n_orbits": 139,
+      "active_orbit_fraction_percent": 0.012108562408750223,
+      "scanned_orbit_fraction_percent": 0.0005085801495972045,
+      "n_endpoints": 1668
+    },
+    {
+      "N_found": 13,
+      "n_orbits": 112,
+      "active_orbit_fraction_percent": 0.009756539494820323,
+      "scanned_orbit_fraction_percent": 0.00040979119967544535,
+      "n_endpoints": 1456
+    },
+    {
+      "N_found": 14,
+      "n_orbits": 83,
+      "active_orbit_fraction_percent": 0.007230292661340061,
+      "scanned_orbit_fraction_percent": 0.00030368454975948184,
+      "n_endpoints": 1162
+    },
+    {
+      "N_found": 15,
+      "n_orbits": 84,
+      "active_orbit_fraction_percent": 0.007317404621115242,
+      "scanned_orbit_fraction_percent": 0.000307343399756584,
+      "n_endpoints": 1260
+    },
+    {
+      "N_found": 16,
+      "n_orbits": 72,
+      "active_orbit_fraction_percent": 0.006272061103813065,
+      "scanned_orbit_fraction_percent": 0.0002634371997913577,
+      "n_endpoints": 1152
+    },
+    {
+      "N_found": 17,
+      "n_orbits": 81,
+      "active_orbit_fraction_percent": 0.007056068741789698,
+      "scanned_orbit_fraction_percent": 0.00029636684976527746,
+      "n_endpoints": 1377
+    },
+    {
+      "N_found": 18,
+      "n_orbits": 92,
+      "active_orbit_fraction_percent": 0.008014300299316693,
+      "scanned_orbit_fraction_percent": 0.00033661419973340153,
+      "n_endpoints": 1656
+    },
+    {
+      "N_found": 19,
+      "n_orbits": 86,
+      "active_orbit_fraction_percent": 0.007491628540665605,
+      "scanned_orbit_fraction_percent": 0.0003146610997507884,
+      "n_endpoints": 1634
+    },
+    {
+      "N_found": 20,
+      "n_orbits": 75,
+      "active_orbit_fraction_percent": 0.006533396983138609,
+      "scanned_orbit_fraction_percent": 0.00027441374978266433,
+      "n_endpoints": 1500
+    },
+    {
+      "N_found": 21,
+      "n_orbits": 46,
+      "active_orbit_fraction_percent": 0.004007150149658347,
+      "scanned_orbit_fraction_percent": 0.00016830709986670076,
+      "n_endpoints": 966
+    },
+    {
+      "N_found": 22,
+      "n_orbits": 50,
+      "active_orbit_fraction_percent": 0.004355597988759073,
+      "scanned_orbit_fraction_percent": 0.00018294249985510954,
+      "n_endpoints": 1100
+    },
+    {
+      "N_found": 23,
+      "n_orbits": 37,
+      "active_orbit_fraction_percent": 0.003223142511681714,
+      "scanned_orbit_fraction_percent": 0.00013537744989278107,
+      "n_endpoints": 851
+    },
+    {
+      "N_found": 24,
+      "n_orbits": 23,
+      "active_orbit_fraction_percent": 0.0020035750748291733,
+      "scanned_orbit_fraction_percent": 8.415354993335038e-05,
+      "n_endpoints": 552
+    },
+    {
+      "N_found": 25,
+      "n_orbits": 20,
+      "active_orbit_fraction_percent": 0.0017422391955036292,
+      "scanned_orbit_fraction_percent": 7.317699994204382e-05,
+      "n_endpoints": 500
+    },
+    {
+      "N_found": 26,
+      "n_orbits": 18,
+      "active_orbit_fraction_percent": 0.0015680152759532662,
+      "scanned_orbit_fraction_percent": 6.585929994783943e-05,
+      "n_endpoints": 468
+    },
+    {
+      "N_found": 27,
+      "n_orbits": 18,
+      "active_orbit_fraction_percent": 0.0015680152759532662,
+      "scanned_orbit_fraction_percent": 6.585929994783943e-05,
+      "n_endpoints": 486
+    },
+    {
+      "N_found": 28,
+      "n_orbits": 12,
+      "active_orbit_fraction_percent": 0.0010453435173021774,
+      "scanned_orbit_fraction_percent": 4.390619996522629e-05,
+      "n_endpoints": 336
+    },
+    {
+      "N_found": 29,
+      "n_orbits": 15,
+      "active_orbit_fraction_percent": 0.0013066793966277218,
+      "scanned_orbit_fraction_percent": 5.4882749956532863e-05,
+      "n_endpoints": 435
+    },
+    {
+      "N_found": 30,
+      "n_orbits": 12,
+      "active_orbit_fraction_percent": 0.0010453435173021774,
+      "scanned_orbit_fraction_percent": 4.390619996522629e-05,
+      "n_endpoints": 360
+    },
+    {
+      "N_found": 31,
+      "n_orbits": 9,
+      "active_orbit_fraction_percent": 0.0007840076379766331,
+      "scanned_orbit_fraction_percent": 3.2929649973919714e-05,
+      "n_endpoints": 279
+    },
+    {
+      "N_found": 32,
+      "n_orbits": 7,
+      "active_orbit_fraction_percent": 0.0006097837184262702,
+      "scanned_orbit_fraction_percent": 2.5611949979715334e-05,
+      "n_endpoints": 224
+    },
+    {
+      "N_found": 33,
+      "n_orbits": 8,
+      "active_orbit_fraction_percent": 0.0006968956782014516,
+      "scanned_orbit_fraction_percent": 2.9270799976817526e-05,
+      "n_endpoints": 264
+    },
+    {
+      "N_found": 34,
+      "n_orbits": 7,
+      "active_orbit_fraction_percent": 0.0006097837184262702,
+      "scanned_orbit_fraction_percent": 2.5611949979715334e-05,
+      "n_endpoints": 238
+    },
+    {
+      "N_found": 35,
+      "n_orbits": 13,
+      "active_orbit_fraction_percent": 0.0011324554770773588,
+      "scanned_orbit_fraction_percent": 4.756504996232848e-05,
+      "n_endpoints": 455
+    },
+    {
+      "N_found": 36,
+      "n_orbits": 6,
+      "active_orbit_fraction_percent": 0.0005226717586510887,
+      "scanned_orbit_fraction_percent": 2.1953099982613146e-05,
+      "n_endpoints": 216
+    },
+    {
+      "N_found": 37,
+      "n_orbits": 8,
+      "active_orbit_fraction_percent": 0.0006968956782014516,
+      "scanned_orbit_fraction_percent": 2.9270799976817526e-05,
+      "n_endpoints": 296
+    },
+    {
+      "N_found": 38,
+      "n_orbits": 7,
+      "active_orbit_fraction_percent": 0.0006097837184262702,
+      "scanned_orbit_fraction_percent": 2.5611949979715334e-05,
+      "n_endpoints": 266
+    },
+    {
+      "N_found": 39,
+      "n_orbits": 9,
+      "active_orbit_fraction_percent": 0.0007840076379766331,
+      "scanned_orbit_fraction_percent": 3.2929649973919714e-05,
+      "n_endpoints": 351
+    },
+    {
+      "N_found": 40,
+      "n_orbits": 3,
+      "active_orbit_fraction_percent": 0.00026133587932554436,
+      "scanned_orbit_fraction_percent": 1.0976549991306573e-05,
+      "n_endpoints": 120
+    }
+  ],
+  "N_found_definition": "Retained solution rows per canonical Z4 flux orbit; fractions use active or scanned orbits as named.",
+  "scan_denominators": {
+    "scanned_flux_choices": 30770178,
+    "scanned_Z4_orbits": 27330992,
+    "orbits_with_retained_solutions": 1147948,
+    "orbits_without_retained_solutions": 26183044,
+    "without_retained_solutions_percent": 95.79983046352653,
+    "source": "Fixed scan counts reported in the paper; not reconstructed from this selected Parquet.",
+    "interpretation": "No retained solution under the finite search and selection; not proof of absence of a vacuum."
+  },
+  "identity": {
+    "raw_flux": {
+      "unique_groups": 1167799,
+      "groups_with_multiple_rows": 81740,
+      "rows_in_multiple_row_groups": 210574,
+      "maximum_row_multiplicity": 10,
+      "mixed_low_nonlow_groups": 12476,
+      "rows_in_mixed_groups": 45464,
+      "low_rows_in_mixed_groups": 26924
+    },
+    "Z4_orbit": {
+      "unique_groups": 1147948,
+      "groups_with_multiple_rows": 83985,
+      "rows_in_multiple_row_groups": 232670,
+      "maximum_row_multiplicity": 40,
+      "mixed_low_nonlow_groups": 12222,
+      "rows_in_mixed_groups": 55533,
+      "low_rows_in_mixed_groups": 33663
+    },
+    "invariant_tuple": {
+      "unique_groups": 1138963,
+      "groups_with_multiple_rows": 91014,
+      "rows_in_multiple_row_groups": 248684,
+      "maximum_row_multiplicity": 77,
+      "mixed_low_nonlow_groups": 12166,
+      "rows_in_mixed_groups": 55970,
+      "low_rows_in_mixed_groups": 33913,
+      "multiple_rows": {
+        "tuples": 91014,
+        "member_rows": 248684,
+        "member_lowV_rows": 82146,
+        "maximum": 77
+      },
+      "multiple_raw_fluxes": {
+        "tuples": 24482,
+        "member_rows": 92989,
+        "member_lowV_rows": 23651,
+        "maximum": 12
+      },
+      "multiple_Z4_orbits": {
+        "tuples": 8876,
+        "member_rows": 23737,
+        "member_lowV_rows": 2232,
+        "maximum": 4
+      },
+      "mixed_single_orbit_tuples": 11976,
+      "mixed_multiple_orbit_tuples": 190
+    },
+    "invariant_order": [
+      "omega12",
+      "omega13",
+      "omega23",
+      "G11",
+      "G12",
+      "G13",
+      "G22",
+      "G23",
+      "G33"
+    ],
+    "Z4_canonical_rule": "Lexicographic minimum of (m,n),(-n,m),(-m,-n),(n,-m)",
+    "omega_definition": "omegaAB=mA*nB-mB*nA",
+    "G_definition": "GAB=mA*mB+nA*nB"
+  },
+  "mixed_same_flux_examples": [
+    {
+      "raw_flux_id": 99297,
+      "raw_flux": [
+        0,
+        -4,
+        13,
+        0,
+        -2,
+        7
+      ],
+      "orbit_id": 1143785,
+      "invariant_id": 458971,
+      "invariant_tuple": [
+        0,
+        0,
+        -2,
+        0,
+        0,
+        0,
+        20,
+        -66,
+        218
+      ],
+      "n_rows": 10,
+      "n_lowV": 5,
+      "low_record": {
+        "source_row": 5092,
+        "lowV": true,
+        "FunctionValue": 1.4885321959971666e-06,
+        "taur": -0.07081919070282938,
+        "taui": 0.668513219323969,
+        "Z1r": 1.161795987020577,
+        "Z1i": 4.975201813582685,
+        "Z2r": 0.3290895264773637,
+        "Z2i": 4.355058625639473,
+        "m1": 0,
+        "m2": -4,
+        "m3": 13,
+        "n1": 0,
+        "n2": -2,
+        "n3": 7
+      },
+      "nonlow_record": {
+        "source_row": 5087,
+        "lowV": false,
+        "FunctionValue": 0.12783168276924514,
+        "taur": -0.500194480136888,
+        "taui": 0.46657857395583285,
+        "Z1r": 4.693241481433631,
+        "Z1i": 8.982881808500672,
+        "Z2r": 2.773782184142888,
+        "Z2i": 9.14296757516466,
+        "m1": 0,
+        "m2": -4,
+        "m3": 13,
+        "n1": 0,
+        "n2": -2,
+        "n3": 7
+      }
+    },
+    {
+      "raw_flux_id": 99302,
+      "raw_flux": [
+        0,
+        -4,
+        13,
+        0,
+        -1,
+        3
+      ],
+      "orbit_id": 1143790,
+      "invariant_id": 465373,
+      "invariant_tuple": [
+        0,
+        0,
+        1,
+        0,
+        0,
+        0,
+        17,
+        -55,
+        178
+      ],
+      "n_rows": 10,
+      "n_lowV": 4,
+      "low_record": {
+        "source_row": 5307,
+        "lowV": true,
+        "FunctionValue": 2.2376084267543064e-06,
+        "taur": 0.16606733109057392,
+        "taui": 0.5788191006075506,
+        "Z1r": -1.5156567505005136,
+        "Z1i": 5.743508990635136,
+        "Z2r": -0.5644018087438836,
+        "Z2i": 4.126836137685473,
+        "m1": 0,
+        "m2": -4,
+        "m3": 13,
+        "n1": 0,
+        "n2": -1,
+        "n3": 3
+      },
+      "nonlow_record": {
+        "source_row": 5305,
+        "lowV": false,
+        "FunctionValue": 0.007536718742760662,
+        "taur": 0.4363174256765504,
+        "taui": 0.6813855782526168,
+        "Z1r": -0.8140069655784239,
+        "Z1i": 3.7663680773206107,
+        "Z2r": -0.2987050792692756,
+        "Z2i": 2.6323204481007947,
+        "m1": 0,
+        "m2": -4,
+        "m3": 13,
+        "n1": 0,
+        "n2": -1,
+        "n3": 3
+      }
+    },
+    {
+      "raw_flux_id": 99334,
+      "raw_flux": [
+        0,
+        -4,
+        13,
+        0,
+        2,
+        -7
+      ],
+      "orbit_id": 1143822,
+      "invariant_id": 465656,
+      "invariant_tuple": [
+        0,
+        0,
+        2,
+        0,
+        0,
+        0,
+        20,
+        -66,
+        218
+      ],
+      "n_rows": 10,
+      "n_lowV": 4,
+      "low_record": {
+        "source_row": 6233,
+        "lowV": true,
+        "FunctionValue": 2.0513949561464243e-06,
+        "taur": 0.6009394767677,
+        "taui": 1.1732383517287903,
+        "Z1r": -1.2796843475227717,
+        "Z1i": 4.518321754933002,
+        "Z2r": -0.49751504911788497,
+        "Z2i": 3.6563640138722513,
+        "m1": 0,
+        "m2": -4,
+        "m3": 13,
+        "n1": 0,
+        "n2": 2,
+        "n3": -7
+      },
+      "nonlow_record": {
+        "source_row": 6237,
+        "lowV": false,
+        "FunctionValue": 0.01817584353067685,
+        "taur": 0.5120397334674907,
+        "taui": 1.7830646597303295,
+        "Z1r": -0.6807739722045603,
+        "Z1i": 3.0605402839756395,
+        "Z2r": -0.250906278273454,
+        "Z2i": 2.41422438713972,
+        "m1": 0,
+        "m2": -4,
+        "m3": 13,
+        "n1": 0,
+        "n2": 2,
+        "n3": -7
+      }
+    },
+    {
+      "raw_flux_id": 99335,
+      "raw_flux": [
+        0,
+        -4,
+        13,
+        0,
+        2,
+        -6
+      ],
+      "orbit_id": 1143823,
+      "invariant_id": 458972,
+      "invariant_tuple": [
+        0,
+        0,
+        -2,
+        0,
+        0,
+        0,
+        20,
+        -64,
+        205
+      ],
+      "n_rows": 10,
+      "n_lowV": 4,
+      "low_record": {
+        "source_row": 6246,
+        "lowV": true,
+        "FunctionValue": 5.173489647568454e-06,
+        "taur": 0.3554843018317305,
+        "taui": 1.1587184028006283,
+        "Z1r": 1.0649906177823067,
+        "Z1i": 4.651684772838973,
+        "Z2r": 0.3078776166497839,
+        "Z2i": 3.4748594158238806,
+        "m1": 0,
+        "m2": -4,
+        "m3": 13,
+        "n1": 0,
+        "n2": 2,
+        "n3": -6
+      },
+      "nonlow_record": {
+        "source_row": 6247,
+        "lowV": false,
+        "FunctionValue": 0.002732094703840874,
+        "taur": 0.3463201221140601,
+        "taui": 1.3829698288724248,
+        "Z1r": 0.767205608744982,
+        "Z1i": 3.9763248731480254,
+        "Z2r": 0.22447875380369056,
+        "Z2i": 2.915593165137824,
+        "m1": 0,
+        "m2": -4,
+        "m3": 13,
+        "n1": 0,
+        "n2": 2,
+        "n3": -6
+      }
+    },
+    {
+      "raw_flux_id": 99340,
+      "raw_flux": [
+        0,
+        -4,
+        13,
+        0,
+        3,
+        -9
+      ],
+      "orbit_id": 1143828,
+      "invariant_id": 458707,
+      "invariant_tuple": [
+        0,
+        0,
+        -3,
+        0,
+        0,
+        0,
+        25,
+        -79,
+        250
+      ],
+      "n_rows": 10,
+      "n_lowV": 5,
+      "low_record": {
+        "source_row": 6365,
+        "lowV": true,
+        "FunctionValue": 5.9709847803320745e-06,
+        "taur": 0.1546986336458036,
+        "taui": 1.4766664987245544,
+        "Z1r": 1.032711656008894,
+        "Z1i": 4.165089135386049,
+        "Z2r": 0.28784997727058814,
+        "Z2i": 2.9577563155359297,
+        "m1": 0,
+        "m2": -4,
+        "m3": 13,
+        "n1": 0,
+        "n2": 3,
+        "n3": -9
+      },
+      "nonlow_record": {
+        "source_row": 6360,
+        "lowV": false,
+        "FunctionValue": 0.00700659923454228,
+        "taur": 0.2637523001942994,
+        "taui": 1.2043550172161088,
+        "Z1r": 1.576736516555613,
+        "Z1i": 4.922342719485089,
+        "Z2r": 0.5187467195452448,
+        "Z2i": 3.6405578452086065,
+        "m1": 0,
+        "m2": -4,
+        "m3": 13,
+        "n1": 0,
+        "n2": 3,
+        "n3": -9
+      }
+    }
+  ],
+  "random_split_identity_overlap": {
+    "split": "Stored source row order; 75/25 stratified by lowV, random_state=0",
+    "train_rows": 972474,
+    "test_rows": 324159,
+    "train_lowV": 95431,
+    "test_lowV": 31810,
+    "by_identity": {
+      "raw_flux": {
+        "test_rows_with_training_match": 44632,
+        "test_fraction": 0.13768551852640218,
+        "lowV_test_rows_with_training_match": 17140,
+        "lowV_test_fraction": 0.538824269097768,
+        "nonlowV_test_rows_with_training_match": 27492,
+        "nonlowV_test_fraction": 0.0940382898521972,
+        "training_unique_keys": 892355,
+        "test_unique_keys": 312286,
+        "test_unique_keys_with_training_match": 36842
+      },
+      "Z4_orbit": {
+        "test_rows_with_training_match": 50018,
+        "test_fraction": 0.15430082151043162,
+        "lowV_test_rows_with_training_match": 18083,
+        "lowV_test_fraction": 0.5684690348946873,
+        "nonlowV_test_rows_with_training_match": 31935,
+        "nonlowV_test_fraction": 0.109235879034989,
+        "training_unique_keys": 877995,
+        "test_unique_keys": 308204,
+        "test_unique_keys_with_training_match": 38251
+      },
+      "invariant_tuple": {
+        "test_rows_with_training_match": 53115,
+        "test_fraction": 0.16385477497154174,
+        "lowV_test_rows_with_training_match": 18258,
+        "lowV_test_fraction": 0.5739704495441685,
+        "nonlowV_test_rows_with_training_match": 34857,
+        "nonlowV_test_fraction": 0.11923078238680482,
+        "training_unique_keys": 872481,
+        "test_unique_keys": 307409,
+        "test_unique_keys_with_training_match": 40927
+      }
+    }
+  },
+  "individual_flux_rates": {
+    "min": 0.031272390104100815,
+    "max": 0.5555555555555556,
+    "minimum_rows_per_flux_bin": 36,
+    "equal_solution_weight": true
+  },
+  "figures": {
+    "histogram": "Positive V only, no clipping, bin width 0.25 dex, logarithmic count axis.",
+    "flux_rate": "Fraction lowV among saved solution rows having each flux component; multiple rows per flux contribute separately.",
+    "PDF_PNG": [
+      "ml_hist_logV",
+      "ml_vacuum_rate"
+    ]
+  }
+}

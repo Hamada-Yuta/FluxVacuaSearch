@@ -1,0 +1,24 @@
+{
+  "source": "data/selected_solutions.parquet",
+  "environment": {
+    "python": "3.11.3",
+    "platform": "macOS-15.4.1-x86_64-i386-64bit",
+    "packages": {
+      "numpy": "2.0.0",
+      "pandas": "3.0.0",
+      "pyarrow": "23.0.0",
+      "matplotlib": "3.10.3",
+      "sklearn": "1.8.0"
+    }
+  },
+  "source_row_convention": "Zero-based physical Parquet row position; no reordering before splitting",
+  "threshold": 3.1622776601683795e-05,
+  "weighting": "Every saved solution/row has equal weight; this is not one row or equal weight per distinct flux choice.",
+  "cpu_limit": 2,
+  "classification_split": {
+    "test_size": 0.25,
+    "stratify": "lowV",
+    "random_state": 0
+  },
+  "elapsed_seconds": 10.307480792049319
+}
