@@ -9,7 +9,7 @@ new Hessian selection, duplicate removal, minimization, coordinate mapping or
 averaging by flux. Only the explicitly named plotting/correlation subsets are
 formed. The common numerical SUSY threshold is |V| < 10**(-4.5).
 
-Flux multiplicity, log-V and per-flux label-fraction plots are reproduced by
+Flux multiplicity, log-V and per-flux SUSY-fraction plots are reproduced by
 analysis.flux_statistics. This module requires no previous results, local
 manuscript files, external symbolic inputs or archived raw scan data.
 """
@@ -144,9 +144,9 @@ def main(argv=None):
         summary['statistics'][group] = desc.to_dict()
         independent_quantiles = np.quantile(frame[COLS].to_numpy(), [0, .25, .5, .75, 1], axis=0)
         assert np.allclose(independent_quantiles, desc.loc[['min', '25%', '50%', '75%', 'max']].to_numpy(), rtol=1e-14, atol=1e-14)
-        for name, columns in [('moduli', COLS[:7]), ('flux', COLS[7:])]:
-            desc[columns].loc[['min', '25%', '50%', '75%', 'max']].to_csv(
-                args.output/f'table_{group}_{name}.csv', float_format='%.17g')
+        columns = COLS[:7] if group == 'all' else COLS[1:7]
+        desc[columns].loc[['min', '25%', '50%', '75%', 'max']].to_csv(
+            args.output/f'table_{group}_moduli.csv', float_format='%.17g')
     matrix_arrays = {}
     for group, frame in [('all', data), ('bounded', bounded), ('SUSY', susy)]:
         print(f'Computing correlations: {group}, {len(frame):,} rows', flush=True)
@@ -173,14 +173,14 @@ def main(argv=None):
         ('correlation_matrix_SUSY', 'SUSY', 'Correlation matrix (SUSY solutions)', True),
     ]:
         figures.pearson(matrix_arrays[group]['pearson'], args.output, stem, title, colorbar)
-    for method, stem, label in [('spearman', 'rank_correlation_spearman', r'Spearman $\rho$'),
-                                ('kendall_b', 'rank_correlation_kendall', r'Kendall $\tau_b$')]:
-        summary['figures'][stem] = figures.rank_pair(args.output, stem, [
-            (matrix_arrays['all'][method], '(a) All reliable solutions'),
-            (matrix_arrays['bounded'][method], r'(b) $\mathrm{Im}\,Z_1,\,\mathrm{Im}\,Z_2\leq 50$')], label)
+    # Kendall coefficients support the text, but the manuscript plots only Spearman.
+    summary['figures']['rank_correlation_spearman'] = figures.rank_pair(
+        args.output, 'rank_correlation_spearman', [
+            (matrix_arrays['all']['spearman'], '(a) Reliable solutions'),
+            (matrix_arrays['bounded']['spearman'], r'(b) $\mathrm{Im}\,Z_1,\,\mathrm{Im}\,Z_2\leq 50$')],
+        r'Spearman $\rho$')
     summary['figures']['rank_correlation_SUSY'] = figures.rank_pair(args.output, 'rank_correlation_SUSY', [
-        (matrix_arrays['SUSY']['spearman'], '(a) Spearman'),
-        (matrix_arrays['SUSY']['kendall_b'], r'(b) Kendall $\tau_b$')], 'Correlation')
+        (matrix_arrays['SUSY']['spearman'], 'Spearman')], r'Spearman $\rho$')
     windows = [('Z1r', 'Z1i', (-10,10), (0,50)), ('Z2r', 'Z2i', (-10,10), (0,50)),
                ('Z1r', 'Z2r', (-10,10), (-10,10)), ('Z1i', 'Z2i', (0,50), (0,50))]
     labelmap = dict(zip(COLS, figures.LABELS))

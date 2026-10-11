@@ -64,7 +64,7 @@
       ]
     },
     "learner_model_param": {
-      "base_score": "-4.813659E-1",
+      "base_score": "-2.8044987E-1",
       "boost_from_average": "1",
       "num_class": "0",
       "num_feature": "9",

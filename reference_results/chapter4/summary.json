@@ -2577,21 +2577,12 @@
         3.78
       ]
     },
-    "rank_correlation_kendall": {
-      "annotations": 338,
-      "all_annotations_fit_cells": true,
-      "all_axis_labels_inside_page": true,
-      "figure_size_inches": [
-        6.3,
-        3.78
-      ]
-    },
     "rank_correlation_SUSY": {
-      "annotations": 338,
+      "annotations": 169,
       "all_annotations_fit_cells": true,
       "all_axis_labels_inside_page": true,
       "figure_size_inches": [
-        6.3,
+        3.4,
         3.78
       ]
     }
@@ -2605,9 +2596,9 @@
     "matplotlib": "3.10.3"
   },
   "instanton": {
-    "median_ratio": 3.493929973371698e-05,
+    "median_ratio": 3.493929973371697e-05,
     "maximum_ratio": 0.0004939058992565873,
-    "median_percent": 0.0034939299733716977,
+    "median_percent": 0.0034939299733716973,
     "maximum_percent": 0.04939058992565873,
     "zero_float64_ratios": 1956,
     "rows_in_bins": 1296633,
@@ -2632,8 +2623,7 @@
     "correlation_matrix_Z1i_Z2i_leq50.pdf",
     "correlation_matrix_reliable.pdf",
     "rank_correlation_SUSY.pdf",
-    "rank_correlation_kendall.pdf",
     "rank_correlation_spearman.pdf"
   ],
-  "elapsed_seconds": 58.19861654099077
+  "elapsed_seconds": 53.5070064580068
 }

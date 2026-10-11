@@ -1,16 +1,16 @@
 {
   "source": "data/selected_solutions.parquet",
-  "save_predictions": false,
+  "save_predictions": true,
   "source_row_convention": "Zero-based physical Parquet row position; no reordering before splitting",
   "source_rows": 1296633,
   "zero_flux_rows_excluded": 0,
   "logV_rows": 1296633,
   "logV_train_rows": 972474,
   "logV_test_rows": 324159,
-  "moduli_rows": 127241,
-  "moduli_train_rows": 95430,
-  "moduli_test_rows": 31811,
-  "lowV_threshold": 3.1622776601683795e-05,
+  "moduli_rows": 1296633,
+  "moduli_train_rows": 972474,
+  "moduli_test_rows": 324159,
+  "moduli_sample": "All reliable solution rows; no potential-value cut",
   "split": {
     "test_size": 0.25,
     "random_state": 0,
@@ -102,166 +102,120 @@
       "r2": 0.8861873995140326,
       "mae": 0.37977001258063564,
       "feature_count": 9,
-      "seconds": 8.935696840286255
+      "seconds": 1.516075611114502
     },
     "invariants9_moduli12": {
       "r2": 0.9088102172498534,
       "mae": 0.34476846861919425,
       "feature_count": 21,
-      "seconds": 13.982875108718872
+      "seconds": 1.4553680419921875
     },
     "raw6_moduli12": {
       "r2": 0.8440349539782848,
       "mae": 0.4828828095108881,
       "feature_count": 18,
-      "seconds": 11.383244037628174
+      "seconds": 1.458521842956543
     },
     "raw6_invariants9_moduli12": {
       "r2": 0.9079885010323665,
       "mae": 0.3459947249869756,
       "feature_count": 27,
-      "seconds": 13.654251098632812
+      "seconds": 1.5347578525543213
     }
   },
   "moduli": {
     "taur": {
       "raw6": {
-        "r2": 0.9498525553385895,
-        "mae": 0.08815035399837912,
-        "median_relative_error": 0.09395892134724067,
-        "physical_mae": 0.273812584385665,
-        "zero_targets_excluded_from_relative_error": 0,
-        "relative_error_denominator": "abs(true value); exact zeros omitted; no epsilon floor",
+        "r2": 0.7852898915371298,
+        "mae": 0.1251181870139661,
         "transform": "sign(x)*ln(1+abs(x))",
-        "seconds": 1.4648776054382324
+        "seconds": 9.975388288497925
       },
       "invariants9": {
-        "r2": 0.7331333395742228,
-        "mae": 0.29649343841076425,
-        "median_relative_error": 0.4427511576141655,
-        "physical_mae": 0.7471246083378223,
-        "zero_targets_excluded_from_relative_error": 0,
-        "relative_error_denominator": "abs(true value); exact zeros omitted; no epsilon floor",
+        "r2": 0.586978546215833,
+        "mae": 0.29433992104864787,
         "transform": "sign(x)*ln(1+abs(x))",
-        "seconds": 1.6650786399841309
+        "seconds": 10.610699892044067
       }
     },
     "taui": {
       "raw6": {
-        "r2": 0.9646057187152806,
-        "mae": 0.07936271771125707,
-        "median_relative_error": 0.12498438609513239,
-        "physical_mae": 0.42129956737003016,
-        "zero_targets_excluded_from_relative_error": 0,
-        "relative_error_denominator": "abs(true value); exact zeros omitted; no epsilon floor",
+        "r2": 0.9103747429076738,
+        "mae": 0.0876987189420883,
         "transform": "log10",
-        "seconds": 1.4290821552276611
+        "seconds": 10.199797868728638
       },
       "invariants9": {
-        "r2": 0.7044713418188556,
-        "mae": 0.23794884450798184,
-        "median_relative_error": 0.38622889069432575,
-        "physical_mae": 0.9163069171865382,
-        "zero_targets_excluded_from_relative_error": 0,
-        "relative_error_denominator": "abs(true value); exact zeros omitted; no epsilon floor",
+        "r2": 0.6916878724234321,
+        "mae": 0.1954446596367548,
         "transform": "log10",
-        "seconds": 1.5650889873504639
+        "seconds": 10.5001540184021
       }
     },
     "Z1r": {
       "raw6": {
-        "r2": 0.8935173918809876,
-        "mae": 0.14622733282480965,
-        "median_relative_error": 0.2525317952191803,
-        "physical_mae": 0.27836165636537474,
-        "zero_targets_excluded_from_relative_error": 0,
-        "relative_error_denominator": "abs(true value); exact zeros omitted; no epsilon floor",
+        "r2": 0.6689818274286741,
+        "mae": 0.2399032944712322,
         "transform": "sign(x)*ln(1+abs(x))",
-        "seconds": 1.4972481727600098
+        "seconds": 10.247196197509766
       },
       "invariants9": {
-        "r2": 0.9683709823814012,
-        "mae": 0.07043102657016022,
-        "median_relative_error": 0.10768795712612825,
-        "physical_mae": 0.13641800504553628,
-        "zero_targets_excluded_from_relative_error": 0,
-        "relative_error_denominator": "abs(true value); exact zeros omitted; no epsilon floor",
+        "r2": 0.8054817358409632,
+        "mae": 0.1465594741293228,
         "transform": "sign(x)*ln(1+abs(x))",
-        "seconds": 1.6280021667480469
+        "seconds": 11.697597026824951
       }
     },
     "Z1i": {
       "raw6": {
-        "r2": 0.7623711683145604,
-        "mae": 0.05265784351522433,
-        "median_relative_error": 0.08670281683831405,
-        "physical_mae": 0.23430423898560945,
-        "zero_targets_excluded_from_relative_error": 0,
-        "relative_error_denominator": "abs(true value); exact zeros omitted; no epsilon floor",
+        "r2": 0.7120803429104214,
+        "mae": 0.060422281027452104,
         "transform": "log10",
-        "seconds": 1.255748987197876
+        "seconds": 9.939562320709229
       },
       "invariants9": {
-        "r2": 0.9136419761839484,
-        "mae": 0.02920450869588725,
-        "median_relative_error": 0.04555647276930945,
-        "physical_mae": 0.1278569228589618,
-        "zero_targets_excluded_from_relative_error": 0,
-        "relative_error_denominator": "abs(true value); exact zeros omitted; no epsilon floor",
+        "r2": 0.7954647842805682,
+        "mae": 0.04017466449302846,
         "transform": "log10",
-        "seconds": 1.4888849258422852
+        "seconds": 11.393595933914185
       }
     },
     "Z2r": {
       "raw6": {
-        "r2": 0.9260179733564915,
-        "mae": 0.19696379041019088,
-        "median_relative_error": 0.20070859191495274,
-        "physical_mae": 0.6447877910232371,
-        "zero_targets_excluded_from_relative_error": 0,
-        "relative_error_denominator": "abs(true value); exact zeros omitted; no epsilon floor",
+        "r2": 0.7503354750272689,
+        "mae": 0.34641707175743985,
         "transform": "sign(x)*ln(1+abs(x))",
-        "seconds": 1.2896149158477783
+        "seconds": 10.268544912338257
       },
       "invariants9": {
-        "r2": 0.9729808377983616,
-        "mae": 0.1054133558995951,
-        "median_relative_error": 0.100317621124733,
-        "physical_mae": 0.3544420565913469,
-        "zero_targets_excluded_from_relative_error": 0,
-        "relative_error_denominator": "abs(true value); exact zeros omitted; no epsilon floor",
+        "r2": 0.8505770218996365,
+        "mae": 0.2148760024568831,
         "transform": "sign(x)*ln(1+abs(x))",
-        "seconds": 1.564046859741211
+        "seconds": 11.114890098571777
       }
     },
     "Z2i": {
       "raw6": {
-        "r2": 0.8304165328365306,
-        "mae": 0.07894779600926757,
-        "median_relative_error": 0.12705371948740585,
-        "physical_mae": 0.5656082027940346,
-        "zero_targets_excluded_from_relative_error": 0,
-        "relative_error_denominator": "abs(true value); exact zeros omitted; no epsilon floor",
+        "r2": 0.7625456377902979,
+        "mae": 0.08151142666274785,
         "transform": "log10",
-        "seconds": 1.1372380256652832
+        "seconds": 10.221522092819214
       },
       "invariants9": {
-        "r2": 0.9312534535194952,
-        "mae": 0.04496344130901134,
-        "median_relative_error": 0.0672355681028208,
-        "physical_mae": 0.31881267734873836,
-        "zero_targets_excluded_from_relative_error": 0,
-        "relative_error_denominator": "abs(true value); exact zeros omitted; no epsilon floor",
+        "r2": 0.855097342044293,
+        "mae": 0.051032853501220256,
         "transform": "log10",
-        "seconds": 1.566061019897461
+        "seconds": 11.07752776145935
       }
     }
   },
   "figure": {
-    "right_panel_target": "Z2r",
-    "all_test_rows_plotted": 31811
+    "target": "Z2i",
+    "panels": 1,
+    "all_test_rows_plotted": 324159,
+    "hexbin_count": 324159
   },
-  "elapsed_seconds": 68.93711018562317,
+  "elapsed_seconds": 143.05130791664124,
   "exact_flux_overlap": {
     "logV": {
       "test_rows": 324159,
@@ -269,9 +223,9 @@
       "test_shared_flux_fraction": 0.1376700939970817
     },
     "moduli": {
-      "test_rows": 31811,
-      "test_rows_sharing_exact_flux_with_training": 15527,
-      "test_shared_flux_fraction": 0.4881016000754456
+      "test_rows": 324159,
+      "test_rows_sharing_exact_flux_with_training": 44627,
+      "test_shared_flux_fraction": 0.1376700939970817
     }
   }
 }

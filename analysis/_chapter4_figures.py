@@ -41,8 +41,11 @@ def pearson(matrix, output, stem, title, colorbar=True):
 
 
 def rank_pair(output, stem, panels, colorbar_label):
-    """Two 13x13 matrices with all 338 values, preserving publication layout."""
-    width, height, side = 6.3, 3.78, 2.60
+    """One or two 13x13 matrices, preserving every coefficient and axis label."""
+    if len(panels) not in (1, 2):
+        raise ValueError('Expected one or two correlation matrices')
+    single = len(panels) == 1
+    width, height, side = (3.4 if single else 6.3), 3.78, 2.60
     style = {'font.family': 'STIXGeneral', 'mathtext.fontset': 'stix',
              'font.size': 7, 'pdf.fonttype': 42, 'ps.fonttype': 42,
              'axes.unicode_minus': False, 'savefig.facecolor': 'white'}
@@ -73,12 +76,14 @@ def rank_pair(output, stem, panels, colorbar_label):
                     texts.append(ax.text(j+.5, i+.5, value, ha='center', va='center',
                                          fontsize=6.1, color='white' if abs(matrix[i,j]) >= .66 else '#161616'))
             annotations.append((ax, texts))
-        cax = fig.add_axes([1.62/width, .205/height, 4.07/width, .095/height])
+        cax = fig.add_axes([(.42 if single else 1.62)/width, .205/height,
+                            (side if single else 4.07)/width, .095/height])
         cb = fig.colorbar(mesh, cax=cax, orientation='horizontal',
                           ticks=[-1, -.5, 0, .5, 1], format='%.1f')
         cb.ax.tick_params(labelsize=7, length=2, width=.4, pad=2)
         cb.outline.set_linewidth(.4)
-        fig.text(.42/width, .2525/height, colorbar_label, fontsize=7.4, ha='left', va='center')
+        fig.text(.42/width, (.43 if single else .2525)/height, colorbar_label,
+                 fontsize=7.4, ha='left', va='center')
         fig.canvas.draw()
         renderer = fig.canvas.get_renderer()
         for ax, texts in annotations:
@@ -91,7 +96,7 @@ def rank_pair(output, stem, panels, colorbar_label):
                 assert bounds.x0 >= 0 and bounds.y0 >= 0
                 assert bounds.x1 <= fig.bbox.width and bounds.y1 <= fig.bbox.height
         save(fig, output, stem, tight=False)
-    return {'annotations': 338, 'all_annotations_fit_cells': True,
+    return {'annotations': 169*len(panels), 'all_annotations_fit_cells': True,
             'all_axis_labels_inside_page': True, 'figure_size_inches': [width, height]}
 
 
@@ -140,7 +145,7 @@ def instanton_histogram(ratio, output):
         ax.yaxis.set_major_locator(LogLocator(base=10, numticks=8))
         ax.yaxis.set_minor_formatter(NullFormatter())
         ax.set_title('Relative instanton correction to the prepotential', loc='left', pad=36, fontsize=14)
-        ax.text(0, 1.035, f'All {len(ratio):,} reliable solutions  |  Total q-degree '+r'$\leq 7$',
+        ax.text(0, 1.035, f'{len(ratio):,} reliable solutions  |  Total q-degree '+r'$\leq 7$',
                 transform=ax.transAxes, fontsize=10, color='#45515E')
         ax.text(.97, .96, f'Maximum: {maximum:.5f}%\n50 equal-width bins',
                 transform=ax.transAxes, ha='right', va='top', fontsize=10, color='#45515E')

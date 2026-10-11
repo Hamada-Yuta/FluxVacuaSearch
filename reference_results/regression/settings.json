@@ -1,9 +1,12 @@
 {
   "source": "data/selected_solutions.parquet",
-  "save_predictions": false,
+  "save_predictions": true,
   "source_row_convention": "Zero-based physical Parquet row position; no reordering before splitting",
   "source_rows": 1296633,
-  "lowV_threshold": 3.1622776601683795e-05,
+  "moduli_sample": "All reliable solution rows; no potential-value cut",
+  "moduli_rows": 1296633,
+  "moduli_train_rows": 972474,
+  "moduli_test_rows": 324159,
   "split": {
     "test_size": 0.25,
     "random_state": 0,

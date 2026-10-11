@@ -1,4 +1,4 @@
-"""Potential, flux-component rates and exact identity groups of selected solutions.
+"""Potential, SUSY fractions by flux parameter and exact identity groups.
 
 Run: python -m analysis.flux_statistics --data data/selected_solutions.parquet
      --output results/flux_statistics
@@ -32,7 +32,7 @@ COLS = ['FunctionValue','taur','taui','Z1r','Z1i','Z2r','Z2i','m1','m2','m3','n1
 FLUX = COLS[-6:]
 INV = ['omega12','omega13','omega23','G11','G12','G13','G22','G23','G33']
 THRESHOLD = 10**(-4.5)
-QUANTILES = [0,.001,.01,.05,.1,.25,.5,.75,.9,.95,.99,.999,1]
+QUANTILES = [0,.01,.25,.5,.75,.99,1]
 # External scan denominators reported in the paper, not inferred from the
 # selected sample (which contains no row for an orbit without retained solutions).
 SCANNED_FLUX_CHOICES = 30_770_178
@@ -82,19 +82,19 @@ def plot_figures(values,low,q01,q99,rates):
     edges=np.arange(start,stop+.125,.25)
     fig,ax=plt.subplots(figsize=(8,4.7),layout='constrained')
     ax.hist(logs,bins=edges,color='#355D85',edgecolor='white',linewidth=.25,
-            label='Retained solutions')
+            label='Reliable solutions')
     if q01>0:
         ax.axvspan(np.log10(q01),np.log10(q99),color='#F2C66D',alpha=.24,
                    label=r'$1\%$--$99\%$ range of $V$')
     ax.axvline(-4.5,color='#B84937',ls='--',lw=1.8,label=r'$V_*=10^{-4.5}$')
-    ax.set(yscale='log',xlabel=r'$\log_{10}V$',ylabel='Number of retained solutions per bin',
-           title='Potential distribution of the retained solutions')
+    ax.set(yscale='log',xlabel=r'$\log_{10}V$',ylabel='Number of reliable solutions per bin',
+           title='Potential distribution of the reliable solutions')
     ax.grid(axis='y',alpha=.18)
     ax.legend(loc='upper left',fontsize=9,framealpha=.95)
-    ax.text(.99,.98,f'$N={len(values):,}$\nLow-$V$: {low.sum():,} ({100*low.mean():.2f}%)',
+    ax.text(.99,.98,f'$N={len(values):,}$\nSUSY: {low.sum():,} ({100*low.mean():.2f}%)',
             transform=ax.transAxes,ha='right',va='top',fontsize=10,
             bbox={'facecolor':'white','edgecolor':'none','alpha':.8})
-    fig.supxlabel('Each saved solution has equal weight; bin width = 0.25 dex',fontsize=10)
+    fig.supxlabel('Each reliable solution has equal weight; bin width = 0.25 dex',fontsize=10)
     for extension in ['pdf','png']:
         fig.savefig(OUT/f'ml_hist_logV.{extension}')
     plt.close(fig)
@@ -113,11 +113,16 @@ def plot_figures(values,low,q01,q99,rates):
         ax.set_xlim(lo-.75,hi+.75)
         ax.set_xticks(np.arange((lo//4)*4,hi+1,4))
         ax.grid(axis='y',alpha=.2)
-        ax.set_xlabel('Stored flux component')
-    axes[0,0].set_ylabel('Low-$V$ solutions (%)')
-    axes[1,0].set_ylabel('Low-$V$ solutions (%)')
-    fig.suptitle(r'Fraction with $V<10^{-4.5}$ among retained solutions',fontsize=14)
-    fig.supxlabel(f'Equal weight per saved solution; dashed line = overall rate ({100*low.mean():.2f}%)',fontsize=10)
+        ax.set_xlabel('Flux parameter')
+    axes[0,0].annotate(f'{100*low.mean():.2f}%',
+                       xy=(.97,100*low.mean()),
+                       xycoords=('axes fraction','data'),
+                       xytext=(0,4),textcoords='offset points',
+                       ha='right',va='bottom',color='#B84937',fontsize=11)
+    axes[0,0].set_ylabel('SUSY fraction (%)')
+    axes[1,0].set_ylabel('SUSY fraction (%)')
+    fig.suptitle(r'Fraction with $V<10^{-4.5}$ among reliable solutions',fontsize=14)
+    fig.supxlabel(f'Equal weight per reliable solution; dashed line = overall SUSY fraction ({100*low.mean():.2f}%)',fontsize=10)
     for extension in ['pdf','png']:
         fig.savefig(OUT/f'ml_vacuum_rate.{extension}')
     plt.close(fig)
@@ -137,10 +142,7 @@ def main():
     assert int(susy.sum())==127241
     finite=np.isfinite(frame.to_numpy())
     assert finite.all()
-    lcs=(frame.Z1i.to_numpy()>=1)&(frame.Z2i.to_numpy()>=1)
-    weak=frame.taui.to_numpy()>1
     q01,q99=np.quantile(values,[.01,.99])
-    trimmed=(values>=q01)&(values<=q99)
     summary={'source':str(DATA),'rows':len(frame),'columns':COLS,
              'weighting':'Every saved solution/row has equal weight; this is not one row or equal weight per distinct flux choice.',
              'lowV':{'condition':'FunctionValue < 10**(-4.5)','threshold':THRESHOLD,'rows':int(low.sum()),'fraction':float(low.mean())},
@@ -151,17 +153,7 @@ def main():
              'log10V_positive':{'rows':int((values>0).sum()),'excluded_nonpositive':int((values<=0).sum()),
                                'min':float(np.log10(values[values>0]).min()),'max':float(np.log10(values[values>0]).max()),
                                'quantiles':quantiles(np.log10(values[values>0]))},
-             'log10_max_V_1e_minus16':{'rows_below_floor':int((values<1e-16).sum()),
-                                    'quantiles':quantiles(np.log10(np.maximum(values,1e-16)))},
-             'nonfinite_by_column':{col:int((~finite[:,i]).sum()) for i,col in enumerate(COLS)},
-             'physical_cuts':{},
-             'V_quantile_trim':{'lower_q01':float(q01),'upper_q99':float(q99),'inclusive':True,
-                                'rows_retained':int(trimmed.sum()),'lowV_retained':int((trimmed&low).sum()),
-                                'lowV_removed':int((~trimmed&low).sum()),'SUSY_retained':int((trimmed&susy).sum())}}
-    for name,mask in [('all',np.ones(len(frame),dtype=bool)),('lowV',low),('SUSY',susy)]:
-        summary['physical_cuts'][name]={'rows':int(mask.sum()),'LCS_Z1i_and_Z2i_ge1':int((mask&lcs).sum()),
-                                        'stored_taui_gt1':int((mask&weak).sum()),'both':int((mask&lcs&weak).sum()),
-                                        'stored_taui_positive':int((mask&(frame.taui.to_numpy()>0)).sum())}
+             'nonfinite_by_column':{col:int((~finite[:,i]).sum()) for i,col in enumerate(COLS)}}
     print(f'Source verified; low V {low.sum():,}; SUSY {susy.sum():,}.',flush=True)
     raw=frame[FLUX].to_numpy(np.int32)
     raw_unique,raw_first,rawid,rawcounts=np.unique(raw,axis=0,return_index=True,return_inverse=True,return_counts=True)
@@ -246,7 +238,10 @@ def main():
                   'invariant_id':invid,'lowV':low}).to_parquet(OUT/'row_identity.parquet',index=False)
     print(f'Unique raw/orbit/invariant: {len(raw_unique):,}/{len(orbit_unique):,}/{len(inv_unique):,}.',flush=True)
     mixed_raw=np.flatnonzero((rawlow>0)&(rawlow<rawcounts))
-    ranked=mixed_raw[np.argsort(-rawcounts[mixed_raw],kind='stable')[:5]]
+    # Retain the explicit same-flux example used in the manuscript.
+    example_flux=np.array([0,-4,13,0,-2,7],dtype=raw_unique.dtype)
+    ranked=mixed_raw[np.all(raw_unique[mixed_raw]==example_flux,axis=1)]
+    assert len(ranked)==1
     examples=[]
     for rid in ranked:
         rows=np.flatnonzero(rawid==rid)
@@ -295,7 +290,7 @@ def main():
                                       'equal_solution_weight':True}
     plot_figures(values,low,q01,q99,rates)
     summary['figures']={'histogram':'Positive V only, no clipping, bin width 0.25 dex, logarithmic count axis.',
-                        'flux_rate':'Fraction lowV among saved solution rows having each flux component; multiple rows per flux contribute separately.',
+                        'flux_rate':'SUSY fraction among reliable solutions having each flux parameter value; multiple solutions per flux contribute separately.',
                         'PDF_PNG':['ml_hist_logV','ml_vacuum_rate']}
     (OUT/'summary.json').write_text(json.dumps(summary,indent=2)+'\n')
     footnote={'rows':len(frame),'raw_flux_choices':len(raw_unique),'Z4_flux_orbits':len(orbit_unique),

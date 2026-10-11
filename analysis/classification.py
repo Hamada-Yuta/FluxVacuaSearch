@@ -1,4 +1,4 @@
-"""Reproduce solution-label classification, ranking and representation comparisons.
+"""Reproduce SUSY classification, ranking and input-representation comparisons.
 
 All models use the paper settings. Boundary-score ties are averaged uniformly.
 Run: python -m analysis.classification --data data/selected_solutions.parquet
@@ -76,7 +76,6 @@ def budget_metrics(y, p, fractions=BUDGETS):
                          recall=expected / positives if positives else None,
                          ideal_recall_upper_bound=min(1.0,k / positives) if positives else None,
                          precision=expected / k,
-                         enrichment=(expected / k) / (positives / n) if positives else None,
                          threshold_score=float(boundary),
                          boundary_tie_rows=right-left,
                          boundary_tie_selected=k-left,
@@ -131,22 +130,15 @@ def feature_sets(raw, inv, inv_names):
                              for a,b in ((0,1),(0,2),(1,2))]).astype(np.float32)
     norm_m, norm_n = (m*m).sum(axis=1), (n*n).sum(axis=1)
     norm = norm_m + norm_n
-    dot = (m*n).sum(axis=1)
-    sym = np.column_stack([m[:,a]*n[:,b]+m[:,b]*n[:,a]
-                           for a,b in ((0,1),(0,2),(1,2))])
     raw_names = ["m1","m2","m3","n1","n2","n3"]
     reduced_names = ["omega12", "omega13", "omega23", "norm2"]
     reduced = np.column_stack((omega, norm)).astype(np.float32)
-    quad_names = ["m_norm2", "n_norm2", "norm2", "m_dot_n",
-                  "omega12", "omega13", "omega23", "s12", "s13", "s23"]
-    quad = np.column_stack((norm_m,norm_n,norm,dot,omega,sym)).astype(np.float32)
     return {
         "raw": (raw, raw_names),
         "reduced_invariants": (reduced, reduced_names),
         "invariants": (inv, inv_names),
         "raw_reduced_invariants": (np.column_stack((raw,reduced)),raw_names+reduced_names),
         "raw_invariants": (np.column_stack((raw,inv)),raw_names+inv_names),
-        "raw_quadratics": (np.column_stack((raw,quad)),raw_names+quad_names),
     }
 
 
@@ -197,13 +189,13 @@ def draw_classifier(y, p):
     axes[0].plot([0,1],[0,1],"--",color="0.5",lw=1)
     axes[0].set(xlabel="False-positive rate",ylabel="True-positive rate",title="ROC")
     axes[1].plot(recall,precision,color="#2466a8",label=f"AP = {ap:.4f}")
-    axes[1].axhline(base,ls="--",color="0.5",lw=1,label=f"Base rate = {base:.3f}")
+    axes[1].axhline(base,ls="--",color="0.5",lw=1,label=f"SUSY fraction = {base:.3f}")
     axes[1].set(xlabel="Recall",ylabel="Precision",title="Precision–recall")
     fractions=np.unique(np.concatenate(([1/len(y)],np.geomspace(1/len(y),1,250),BUDGETS)))
     rows=budget_metrics(y,p,fractions)
     axes[2].plot([r["actual_budget"] for r in rows],[r["recall"] for r in rows],color="#2466a8",label="Classifier ranking")
     axes[2].plot([0,1],[0,1],"--",color="0.5",lw=1,label="Random ranking")
-    axes[2].set(xlabel="Fraction of held-out endpoint rows selected",ylabel="Fraction of low-$V$ rows recovered",title="Retrospective row ranking")
+    axes[2].set(xlabel="Fraction of the test set selected",ylabel="Fraction of SUSY solutions recovered",title="Ranking by prediction score")
     for ax in axes:
         ax.set_xlim(0,1); ax.set_ylim(0,1.01); ax.grid(alpha=.2); ax.legend(fontsize=8,loc="best")
     fig.savefig(HERE/"ml_classifier.pdf")
@@ -232,8 +224,8 @@ def shap_attributions(model, features, names, test):
     display={"omega12":r"$\omega_{12}$","omega13":r"$\omega_{13}$","omega23":r"$\omega_{23}$"}
     display.update({f"G{a}{b}":rf"$G_{{{a}{b}}}$" for a,b in ((1,1),(1,2),(1,3),(2,2),(2,3),(3,3))})
     ax.barh([display.get(names[i],names[i]) for i in order],means[order],color="#2466a8")
-    ax.set_xlabel("Mean absolute exact TreeSHAP attribution (log-odds)")
-    ax.set_title(f"{len(sample):,} held-out endpoint rows")
+    ax.set_xlabel("Mean absolute TreeSHAP contribution (log-odds)")
+    ax.set_title(f"{len(sample):,} solutions from the test set")
     ax.grid(axis="x",alpha=.2)
     fig.savefig(HERE/"ml_shap.pdf");fig.savefig(HERE/"ml_shap.png",dpi=160);plt.close(fig)
     return dict(sample_rows=len(sample),seed=0,method="XGBoost exact TreeSHAP pred_contribs=True approx_contribs=False",
