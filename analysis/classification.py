@@ -25,7 +25,6 @@ matplotlib.use("Agg")
 import matplotlib.pyplot as plt
 import sklearn
 from sklearn.metrics import roc_auc_score, average_precision_score, brier_score_loss
-from sklearn.metrics import roc_curve, precision_recall_curve
 from sklearn.model_selection import train_test_split
 import xgboost as xgb
 
@@ -179,32 +178,6 @@ def make_nested_samples(train, y, sizes):
     return result
 
 
-def draw_classifier(y, p):
-    fig, axes = plt.subplots(1, 3, figsize=(13.2, 3.9), constrained_layout=True)
-    fpr, tpr, _ = roc_curve(y, p, drop_intermediate=True)
-    precision, recall, _ = precision_recall_curve(y,p)
-    auc = roc_auc_score(y,p); ap = average_precision_score(y,p)
-    base = float(np.mean(y))
-    axes[0].plot(fpr,tpr,color="#2466a8",label=f"AUC = {auc:.4f}")
-    axes[0].plot([0,1],[0,1],"--",color="0.5",lw=1)
-    axes[0].set(xlabel="False-positive rate",ylabel="True-positive rate",title="ROC")
-    axes[1].plot(recall,precision,color="#2466a8",label=f"AP = {ap:.4f}")
-    axes[1].axhline(base,ls="--",color="0.5",lw=1,label=f"SUSY fraction = {base:.3f}")
-    axes[1].set(xlabel="Recall",ylabel="Precision",title="Precision–recall")
-    fractions=np.unique(np.concatenate(([1/len(y)],np.geomspace(1/len(y),1,250),BUDGETS)))
-    rows=budget_metrics(y,p,fractions)
-    axes[2].plot([r["actual_budget"] for r in rows],[r["recall"] for r in rows],color="#2466a8",label="Classifier ranking")
-    axes[2].plot([0,1],[0,1],"--",color="0.5",lw=1,label="Random ranking")
-    axes[2].set(xlabel="Fraction of the test set selected",ylabel="Fraction of SUSY solutions recovered",title="Ranking by prediction score")
-    for ax in axes:
-        ax.set_xlim(0,1); ax.set_ylim(0,1.01); ax.grid(alpha=.2); ax.legend(fontsize=8,loc="best")
-    fig.savefig(HERE/"ml_classifier.pdf")
-    fig.savefig(HERE/"ml_classifier.png",dpi=160)
-    plt.close(fig)
-    np.savez_compressed(HERE/"classifier_curves.npz",fpr=fpr,tpr=tpr,precision=precision,recall=recall)
-    save_csv("ranking_curve.csv",rows)
-
-
 def shap_attributions(model, features, names, test):
     sample = np.random.default_rng(0).choice(test,size=min(8000,len(test)),replace=False)
     data = features[sample]
@@ -288,7 +261,6 @@ def run_analysis(raw, inv, inv_names, potential, train, test, group_train, group
         target=(potential[test] < 10.0**exponent).astype(np.int8)
         robustness.append(dict(log10_threshold=exponent,threshold=10.0**exponent,**metrics(target,p)))
     save_csv("threshold_robustness.csv",robustness);results["threshold_robustness"]=robustness
-    draw_classifier(y[test],p)
     results["shap"]=shap_attributions(model,features,names,test)
     dump("results.partial.json",results)
     # Fix the main test set and features while enlarging nested training subsets.

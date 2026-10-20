@@ -100,10 +100,6 @@ and Table 2 compares earlier papers rather than a computed dataset summary.
 | Tables 7–9 | `classification/threshold_robustness.csv`, `grouped_comparison.csv`, `learning_curve.csv` |
 | Tables 10–11; Figure 12 | `regression/logV_scores.csv`, `moduli_scores.csv`; `ml_moduli_prediction.pdf` |
 
-The classifier ROC, precision-recall, and ranking plots in
-`classification/ml_classifier.pdf` are retained as auxiliary diagnostics;
-they are not included as a figure in the manuscript.
-
 Numerical Kendall correlations are retained to support the qualitative
 comparison in Section 4.3; no Kendall figure is generated.
 
