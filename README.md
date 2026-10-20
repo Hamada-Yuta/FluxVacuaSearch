@@ -5,9 +5,9 @@ and 5, and executable statistical and machine-learning analyses for the manuscri
 
 It is intended as a companion repository to the manuscript:
 
-**Data analysis of millions of Type IIB flux vacua**  
-Yuta Hamada, Yuma Uematsu, and Masahito Yamazaki  
-An arXiv identifier will be added after submission.
+**Data analysis of millions of Type IIB flux vacua, by Yuta Hamada, Yuma Uematsu, and Masahito Yamazaki**. [arXiv:2610.XXXXX](https://arxiv.org/abs/2610.XXXXX)
+
+The arXiv identifier is a placeholder and will be updated after submission.
 
 The bundled model `i = 2` is the model studied in the manuscript: the
 **degree-18 Calabi–Yau hypersurface in the weighted projective space
