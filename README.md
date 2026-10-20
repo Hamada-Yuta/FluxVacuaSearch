@@ -81,7 +81,7 @@ $\log_{10}(\mathrm{Im}\,Z_2)$ using the invariant inputs.
 ### Manuscript figures and tables
 
 The filenames below are stable identifiers; figure and table numbers refer
-to the manuscript draft of 11 October 2026. Figures are generated in the
+to the manuscript draft of 20 October 2026. Figures are generated in the
 chosen output directories. Figure 1 is the manuscript's own TikZ flowchart,
 and Table 2 compares earlier papers rather than a computed dataset summary.
 
@@ -95,10 +95,14 @@ and Table 2 compares earlier papers rather than a computed dataset summary.
 | Figures 7–9 | `chapter4/correlation_matrix_SUSY.pdf`, `rank_correlation_SUSY.pdf` (Spearman), `SUSY_Z2r_Z1r.pdf`, `SUSY_Z2i_Z1i.pdf` |
 | Table 4; Figure 10 | `flux_statistics/solutions_per_orbit.csv`; `ml_vacuum_rate.pdf` |
 | Table 5 | `classification/feature_ablation.csv`, including the Brier score |
-| Figure 11; Table 6 | `classification/ml_classifier.pdf`; `budget.csv` |
-| Figure 12 | `classification/ml_shap.pdf` and `shap.csv` |
+| Table 6 | `classification/budget.csv` |
+| Figure 11 | `classification/ml_shap.pdf` and `shap.csv` |
 | Tables 7–9 | `classification/threshold_robustness.csv`, `grouped_comparison.csv`, `learning_curve.csv` |
-| Tables 10–11; Figure 13 | `regression/logV_scores.csv`, `moduli_scores.csv`; `ml_moduli_prediction.pdf` |
+| Tables 10–11; Figure 12 | `regression/logV_scores.csv`, `moduli_scores.csv`; `ml_moduli_prediction.pdf` |
+
+The classifier ROC, precision-recall, and ranking plots in
+`classification/ml_classifier.pdf` are retained as auxiliary diagnostics;
+they are not included as a figure in the manuscript.
 
 Numerical Kendall correlations are retained to support the qualitative
 comparison in Section 4.3; no Kendall figure is generated.
